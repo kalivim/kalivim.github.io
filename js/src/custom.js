@@ -248,17 +248,6 @@ function btnPinClick() {
 }
 
 $(document).ready(function () {
-  //缓存控制是否显示 侧边栏 1：显示；0：隐藏；默认显示
-  if (localStorage.sidebar_show) {
-    if (Number(localStorage.sidebar_show) == 1) {
-      NexT.utils.displaySidebar();
-    } else {
-      localStorage.sidebar_show = 0;
-    }
-    ;
-  } else {
-    NexT.utils.displaySidebar();
-  }
 
   createCopyBtns();
 
