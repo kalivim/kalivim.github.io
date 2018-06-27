@@ -2,69 +2,6 @@ var browserHeight = document.documentElement.clientHeight || document.body.clien
 var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
 
 
-var g_FlyPig = {};
-
-(function(){
-  function FlyPig(itemID, srcImg, maxSize, maxCount) {
-    var startID = 0;
-    var stopID = 0;
-
-    var canvas = document.getElementById(itemID);
-    var context = canvas.getContext('2d');
-    var imageObj = new Image();
-    imageObj.src = srcImg;
-    var pigs = [];
-    var maxSize = maxSize > 0 ? maxSize : 25;
-    var rangeWidth = canvas.width + maxSize;
-
-    function initPigs() {
-      var maxCount = maxCount > 0 ? maxCount : 15;
-      var rangeHeight = canvas.height - maxSize;
-      for (var i = 0; i < maxCount; i++) {
-        pigs.push({size: Math.random() * maxSize, y: Math.random() * rangeHeight, x: Math.random() * rangeWidth});
-      }
-      pigs.sort(function (a, b) {
-        return a.size - b.size;
-      });
-    }
-    initPigs();
-
-    function update() {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      for (var i = 0, len = pigs.length; i < len; i++) {
-        context.restore();
-        pigs[i].x += .1 * pigs[i].size;
-        context.drawImage(imageObj,
-          (pigs[i].x % rangeWidth) - maxSize,
-          pigs[i].y + Math.sin(pigs[i].x / 100) * 20,
-          pigs[i].size,
-          pigs[i].size);
-      }
-    }
-
-    this.start = function() {
-      if (stopID > 0) {
-        window.clearInterval(stopID);
-        stopID = 0;
-      }
-      if (startID == 0) {
-        startID = setInterval(update, 1000 / 60);
-      }
-    }
-
-    this.stop = function() {
-      if (stopID == 0) {
-        stopID = setTimeout(function () {
-          window.clearInterval(startID);
-          startID = 0;
-        }, 3000);
-      }
-    }
-  }
-  window.FlyPig = FlyPig;
-})();
-
-//---
 function FigureHover(figure) {
   $("[copyFlag]").removeAttr("copyFlag");
   $(figure).find(".code").attr("copyFlag", 1);
@@ -210,10 +147,10 @@ $(window).resize(function () {
 function createCopyBtns() {
   var $figure = $("figure .figcode");
   if ($figure.length > 0) {
-    $(".post-body").before('<div id="copyBtn" ><span id="imgCopy" ><i class="fa fa-paste fa-fw"></i></span><span id="imgSuccess" style="display: none;color: #6FB76F;"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i></span>');
+    //$(".post-body").before('<div id="copyBtn" ><span id="imgCopy" ><i class="fa fa-paste fa-fw"></i></span><span id="imgSuccess" style="display: none;color: #6FB76F;"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i></span>');
     $figure.append('<div class="codePinBtn"><img id="imgSuccess" src="/article_images/png/Pin_green.png" style="border:none; width: 24px;"></div>');
   }
-  var $codeArea = $("figure .code");
+  /*var $codeArea = $("figure .code");
   if ($codeArea.length > 0) {
     function changeToSuccess(item) {
       $imgOK = $("#copyBtn").find("#imgSuccess");
@@ -292,7 +229,7 @@ function createCopyBtns() {
         }, 2000);
       }
     );
-  }
+  }*/
 }
 
 function btnPinClick() {
@@ -310,27 +247,26 @@ function btnPinClick() {
   }
 }
 
-
-//----
-
-$(".sidebar, .sidebar-toggle").hover(
-  function () {
-    g_FlyPig.start();
-    $('#sidebarClock').css("opacity", "1");
-    $('canvas#sidebar-author').stop();
-    $('canvas#sidebar-author').animate({opacity: 1}, 1000);
-    $('.sidebar-background').css("opacity", "0.15");
-    $(".sidebar, .sidebar-toggle").css("opacity", "1");
-  },
-  function () {
-    $('#sidebarClock').css("opacity", "0");
-    $('canvas#sidebar-author').stop();
-    $('canvas#sidebar-author').animate({opacity: 0}, 1000);
-    $('.sidebar-background').css("opacity", "0");
-    $(".sidebar, .sidebar-toggle").css("opacity", "0.98");
-    g_FlyPig.stop();
+$(document).ready(function () {
+  //缓存控制是否显示 侧边栏 1：显示；0：隐藏；默认显示
+  if (localStorage.sidebar_show) {
+    if (Number(localStorage.sidebar_show) == 1) {
+      NexT.utils.displaySidebar();
+    } else {
+      localStorage.sidebar_show = 0;
+    }
+    ;
+  } else {
+    NexT.utils.displaySidebar();
   }
-);
 
+  createCopyBtns();
 
-//-----------------------------------------------------------------------------------------
+  $(".codePinBtn").unbind("click").bind("click", btnPinClick);
+
+  // console.log('navigator.userAgent', navigator.userAgent);
+  // console.log(getBrowser(1));
+
+  //$(".footer-inner .fa-heart").addClass("fa-" + getBrowser().toLowerCase());
+});
+
