@@ -1,0 +1,1308 @@
+<!doctype html>
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Kalam:300,300italic,400,400italic,700,700italicUbuntu:300,300italic,400,400italic,700,700italicSatisfy:300,300italic,400,400italic,700,700italicInconsolata:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Mycat," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="常用的根据主键或非主键的分片规则配置">
+<meta name="keywords" content="Mycat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mycat分片规则">
+<meta property="og:url" content="https://kionf.com/2017/05/07/mycat-alg/index.html">
+<meta property="og:site_name" content="Kionf">
+<meta property="og:description" content="常用的根据主键或非主键的分片规则配置">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-06-09T02:45:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mycat分片规则">
+<meta name="twitter:description" content="常用的根据主键或非主键的分片规则配置">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kionf.com/2017/05/07/mycat-alg/"/>
+
+
+
+
+
+  <title>Mycat分片规则 | Kionf</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-80809114-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title title motto-shake" data-text="Kionf"></span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://kionf.com/2017/05/07/mycat-alg/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kionf">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kionf">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Mycat分片规则</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-07T00:00:00+08:00">
+                2017-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/Mycat/" itemprop="url" rel="index">
+                    <span itemprop="name">Mycat</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/05/07/mycat-alg/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/05/07/mycat-alg/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center"><p>常用的根据主键或非主键的分片规则配置 </p>
+</blockquote>
+<a id="more"></a>
+<h2 id="1-枚举法："><a href="#1-枚举法：" class="headerlink" title="1. 枚举法："></a>1. 枚举法：</h2><p>  通过在配置文件中配置可能的枚举id，自己配置分片，使用规则：</p>
+<figure class="highlight xml"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></div><div class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">tableRule</span> <span class="attr">name</span>=<span class="string">"sharding-by-intfile"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">rule</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!--标识将要分片的表字段--&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">columns</span>&gt;</span>user_id<span class="tag">&lt;/<span class="name">columns</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!--分片函数--&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">algorithm</span>&gt;</span>hash-int<span class="tag">&lt;/<span class="name">algorithm</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">rule</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">tableRule</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"hash-int"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByFileMap"</span>&gt;</span></div><div class="line">	<span class="comment">&lt;!--标识配置文件名称--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>partition-hash-int.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--type默认值为0，0表示Integer，非零表示String--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"type"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--所有的节点配置都是从0开始，及0代表节点1--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></div></div></figure>
+<p>partition-hash-int.txt 配置：</p>
+<figure class="highlight ini"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></div><div class="code"><pre><div class="line"><span class="attr">10000</span>=<span class="number">0</span></div><div class="line"><span class="attr">10010</span>=<span class="number">1</span></div><div class="line"><span class="attr">DEFAULT_NODE</span>=<span class="number">1</span></div></pre></div></div></figure>
+<div class="note danger"><p> defaultNode 默认节点:小于0表示不设置默认节点，大于等于0表示设置默认节点</p>
+<p>默认节点的作用：枚举分片时，如果碰到不识别的枚举值，就让它路由到默认节点<br>如果不配置默认节点（defaultNode值小于0表示不配置默认节点），碰到<br>不识别的枚举值就会报错，</p>
+<p>  <code>like this：can&#39;t find datanode for sharding column:column_name val:ffffffff</code></p>
+</div>
+<h2 id="2-固定分片hash算法"><a href="#2-固定分片hash算法" class="headerlink" title="2.固定分片hash算法"></a>2.固定分片hash算法</h2><figure class="highlight xml"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></div><div class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">tableRule</span> <span class="attr">name</span>=<span class="string">"rule1"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">rule</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--标识将要分片的表字段--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">columns</span>&gt;</span>user_id<span class="tag">&lt;/<span class="name">columns</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--分片函数--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">algorithm</span>&gt;</span>func1<span class="tag">&lt;/<span class="name">algorithm</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">rule</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">tableRule</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"func1"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByLong"</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!--分片个数列表--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionCount"</span>&gt;</span>2,1<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!--分片范围列表--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionLength"</span>&gt;</span>256,512<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!--分区长度:默认为最大2^n=1024 ,即最大支持1024分区--&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></div></div></figure>
+<p>约束 :</p>
+<figure class="highlight applescript"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></div><div class="code"><pre><div class="line"><span class="built_in">count</span>,<span class="built_in">length</span>两个数组的长度必须是一致的。</div><div class="line"></div><div class="line"><span class="number">1024</span> = sum((<span class="built_in">count</span>[i]*<span class="built_in">length</span>[i])). <span class="built_in">count</span>和<span class="built_in">length</span>两个向量的点积恒等于<span class="number">1024</span></div></pre></div></div></figure>
+<p>用法例子：</p>
+<figure class="highlight xml"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></div><div class="code"><pre><div class="line">        本例的分区策略：希望将数据水平分成3份，前两份各占25%，第三份占50%。（故本例非均匀分区）</div><div class="line">        // |<span class="tag">&lt;<span class="name">---------------------1024------------------------</span>&gt;</span>|</div><div class="line">        // |<span class="tag">&lt;<span class="name">----256---</span>&gt;</span>|<span class="tag">&lt;<span class="name">----256---</span>&gt;</span>|<span class="tag">&lt;<span class="name">----------512----------</span>&gt;</span>|</div><div class="line">        // | partition0 | partition1 | partition2 |</div><div class="line">        // | 共2份,故count[0]=2 | 共1份，故count[1]=1 |</div><div class="line">        int[] count = new int[] &#123; 2, 1 &#125;;</div><div class="line">        int[] length = new int[] &#123; 256, 512 &#125;;</div><div class="line">        PartitionUtil pu = new PartitionUtil(count, length);</div><div class="line"></div><div class="line">        // 下面代码演示分别以offerId字段或memberId字段根据上述分区策略拆分的分配结果</div><div class="line">        int DEFAULT_STR_HEAD_LEN = 8; // cobar默认会配置为此值</div><div class="line">        long offerId = 12345;</div><div class="line">        String memberId = "qiushuo";</div><div class="line"></div><div class="line">        // 若根据offerId分配，partNo1将等于0，即按照上述分区策略，offerId为12345时将会被分配到partition0中</div><div class="line">        int partNo1 = pu.partition(offerId);</div><div class="line"></div><div class="line">        // 若根据memberId分配，partNo2将等于2，即按照上述分区策略，memberId为qiushuo时将会被分到partition2中</div><div class="line">        int partNo2 = pu.partition(memberId, 0, DEFAULT_STR_HEAD_LEN);</div><div class="line"></div><div class="line">如果需要平均分配设置：平均分为4分片，partitionCount*partitionLength=1024</div><div class="line"></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"func1"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByLong"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionCount"</span>&gt;</span>4<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionLength"</span>&gt;</span>256<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></div></div></figure>
+<h2 id="3-范围约定"><a href="#3-范围约定" class="headerlink" title="3.范围约定"></a>3.范围约定</h2><figure class="highlight xml"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></div><div class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">tableRule</span> <span class="attr">name</span>=<span class="string">"auto-sharding-long"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">rule</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!--标识将要分片的表字段--&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">columns</span>&gt;</span>user_id<span class="tag">&lt;/<span class="name">columns</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!--分片函数--&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">algorithm</span>&gt;</span>rang-long<span class="tag">&lt;/<span class="name">algorithm</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">rule</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">tableRule</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"rang-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.AutoPartitionByLong"</span>&gt;</span></div><div class="line">	<span class="comment">&lt;!--配置文件路径--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>autopartition-long.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></div></div></figure>
+<p>autopartition-long.txt：</p>
+<figure class="highlight lsl"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></div><div class="code"><pre><div class="line"># range start-end ,data node index</div><div class="line"># 所有的节点配置都是从<span class="number">0</span>开始，及<span class="number">0</span>代表节点<span class="number">1</span>，此配置非常简单，即预先制定可能的id范围到某个分片</div><div class="line"># K=<span class="number">1000</span>,M=<span class="number">10000.</span></div><div class="line"><span class="number">0</span><span class="number">-500</span>M=<span class="number">0</span></div><div class="line"><span class="number">500</span>M<span class="number">-1000</span>M=<span class="number">1</span></div><div class="line"><span class="number">1000</span>M<span class="number">-1500</span>M=<span class="number">2</span></div><div class="line">或</div><div class="line"><span class="number">0</span><span class="number">-10000000</span>=<span class="number">0</span></div><div class="line"><span class="number">10000001</span><span class="number">-20000000</span>=<span class="number">1</span></div></pre></div></div></figure>
+<h2 id="4-求模法"><a href="#4-求模法" class="headerlink" title="4.求模法"></a>4.求模法</h2><figure class="highlight xml"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></div><div class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">tableRule</span> <span class="attr">name</span>=<span class="string">"mod-long"</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">rule</span>&gt;</span></div><div class="line">     <span class="comment">&lt;!--标识将要分片的表字段--&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">columns</span>&gt;</span>user_id<span class="tag">&lt;/<span class="name">columns</span>&gt;</span></div><div class="line">     <span class="comment">&lt;!--分片函数--&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">algorithm</span>&gt;</span>mod-long<span class="tag">&lt;/<span class="name">algorithm</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">rule</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">tableRule</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"mod-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByMod"</span>&gt;</span></div><div class="line">   <span class="comment">&lt;!--注意！这里填写数据库节点数，否则无法分片--&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"count"</span>&gt;</span>3<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></div></div></figure>
+<p>此种配置非常明确即根据id进行十进制求模预算，相比方式1，此种在批量插入时需要切换数据源，id不连续</p>
+<h2 id="5-日期列分区法"><a href="#5-日期列分区法" class="headerlink" title="5.日期列分区法"></a>5.日期列分区法</h2><figure class="highlight xml"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></div><div class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">tableRule</span> <span class="attr">name</span>=<span class="string">"sharding-by-date"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">rule</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!--标识将要分片的表字段--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">columns</span>&gt;</span>create_time<span class="tag">&lt;/<span class="name">columns</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!--分片函数--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">algorithm</span>&gt;</span>sharding-by-date<span class="tag">&lt;/<span class="name">algorithm</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">rule</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">tableRule</span>&gt;</span>  </div><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"sharding-by-date"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByDate"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"dateFormat"</span>&gt;</span>yyyy-MM-dd<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"sBeginDate"</span>&gt;</span>2015-01-01<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"sPartionDay"</span>&gt;</span>10<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></div></div></figure>
+<p>配置中配置了开始日期，分区天数，即默认从开始日期算起，分隔10天一个分区</p>
+<figure class="highlight maxima"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></div><div class="code"><pre><div class="line">Assert.assertEquals(<span class="literal">true</span>, <span class="number">0</span> == <span class="built_in">partition</span>.calculate(<span class="string">"2015-01-01"</span>));</div><div class="line">Assert.assertEquals(<span class="literal">true</span>, <span class="number">0</span> == <span class="built_in">partition</span>.calculate(<span class="string">"2015-01-10"</span>));</div><div class="line">Assert.assertEquals(<span class="literal">true</span>, <span class="number">1</span> == <span class="built_in">partition</span>.calculate(<span class="string">"2015-01-11"</span>));</div><div class="line">Assert.assertEquals(<span class="literal">true</span>, <span class="number">12</span> == <span class="built_in">partition</span>.calculate(<span class="string">"2015-05-01"</span>));</div></pre></div></div></figure>
+<h2 id="6-通配取模"><a href="#6-通配取模" class="headerlink" title="6.通配取模"></a>6.通配取模</h2><figure class="highlight xml"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></div><div class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">tableRule</span> <span class="attr">name</span>=<span class="string">"sharding-by-pattern"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">rule</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!--标识将要分片的表字段--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">columns</span>&gt;</span>user_id<span class="tag">&lt;/<span class="name">columns</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!--分片函数--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">algorithm</span>&gt;</span>sharding-by-pattern<span class="tag">&lt;/<span class="name">algorithm</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">rule</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">tableRule</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"sharding-by-pattern"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByPattern"</span>&gt;</span></div><div class="line">	<span class="comment">&lt;!--求模基数--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"patternValue"</span>&gt;</span>256<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--默认节点--&gt;</span></div><div class="line">    <span class="comment">&lt;!--如果配置了默认，则不会按照求模运算--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!-- 配置文件路径--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>partition-pattern.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></div></div></figure>
+<p>partition-pattern.txt ：</p>
+<figure class="highlight lsl"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></div><div class="code"><pre><div class="line"># id partition range start-end ,data node index</div><div class="line">###### first host configuration</div><div class="line"><span class="number">1</span><span class="number">-32</span>=<span class="number">0</span></div><div class="line"><span class="number">33</span><span class="number">-64</span>=<span class="number">1</span></div><div class="line"><span class="number">65</span><span class="number">-96</span>=<span class="number">2</span></div><div class="line"><span class="number">97</span><span class="number">-128</span>=<span class="number">3</span></div><div class="line">######## second host configuration</div><div class="line"><span class="number">129</span><span class="number">-160</span>=<span class="number">4</span></div><div class="line"><span class="number">161</span><span class="number">-192</span>=<span class="number">5</span></div><div class="line"><span class="number">193</span><span class="number">-224</span>=<span class="number">6</span></div><div class="line"><span class="number">225</span><span class="number">-256</span>=<span class="number">7</span></div><div class="line"><span class="number">0</span><span class="number">-0</span>=<span class="number">7</span></div><div class="line"></div><div class="line">#<span class="number">1</span><span class="number">-32</span> 即代表id%<span class="number">256</span>后分布的范围，如果在<span class="number">1</span><span class="number">-32</span>则在分区<span class="number">1</span>，其他类推，如果id非数据，则会分配在defaoultNode 默认节点</div></pre></div></div></figure>
+<h2 id="7-ASCII码求模通配"><a href="#7-ASCII码求模通配" class="headerlink" title="7. ASCII码求模通配"></a>7. ASCII码求模通配</h2><figure class="highlight xml"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></div><div class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">tableRule</span> <span class="attr">name</span>=<span class="string">"sharding-by-prefixpattern"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">rule</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!--标识将要分片的表字段--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">columns</span>&gt;</span>user_id<span class="tag">&lt;/<span class="name">columns</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!--分片函数--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">algorithm</span>&gt;</span>sharding-by-prefixpattern<span class="tag">&lt;/<span class="name">algorithm</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">rule</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">tableRule</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"sharding-by-pattern"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByPattern"</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--求模基数--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"patternValue"</span>&gt;</span>256<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--ASCII 截取的位数--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"prefixLength"</span>&gt;</span>5<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!-- 配置文件路径--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>partition-pattern.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></div></div></figure>
+<p>partition-pattern.txt：</p>
+<figure class="highlight lsl"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></div><div class="code"><pre><div class="line"># range start-end ,data node index</div><div class="line"># ASCII</div><div class="line"># <span class="number">48</span><span class="number">-57</span>=<span class="number">0</span><span class="number">-9</span></div><div class="line"># <span class="number">64</span>、<span class="number">65</span><span class="number">-90</span>=@、A-Z</div><div class="line"># <span class="number">97</span><span class="number">-122</span>=a-z</div><div class="line">###### first host configuration</div><div class="line"><span class="number">1</span><span class="number">-4</span>=<span class="number">0</span></div><div class="line"><span class="number">5</span><span class="number">-8</span>=<span class="number">1</span></div><div class="line"><span class="number">9</span><span class="number">-12</span>=<span class="number">2</span></div><div class="line"><span class="number">13</span><span class="number">-16</span>=<span class="number">3</span></div><div class="line">###### second host configuration</div><div class="line"><span class="number">17</span><span class="number">-20</span>=<span class="number">4</span></div><div class="line"><span class="number">21</span><span class="number">-24</span>=<span class="number">5</span></div><div class="line"><span class="number">25</span><span class="number">-28</span>=<span class="number">6</span></div><div class="line"><span class="number">29</span><span class="number">-32</span>=<span class="number">7</span></div><div class="line"><span class="number">0</span><span class="number">-0</span>=<span class="number">7</span></div><div class="line">#<span class="number">1</span><span class="number">-32</span> 即代表id%<span class="number">256</span>后分布的范围，如果在<span class="number">1</span><span class="number">-32</span>则在分区<span class="number">1</span>，其他类推</div></pre></div></div></figure>
+<p>此种方式类似<code>方式6</code>只不过采取的是将列种获取前prefixLength位列所有ASCII码的和进行求模sum%patternValue ,获取的值，在通配范围内的即 分片数，</p>
+<blockquote>
+<p>ASCII编码：<br>48-57=0-9阿拉伯数字<br>64、65-90=@、A-Z<br>97-122=a-z</p>
+</blockquote>
+<p>例如： </p>
+<figure class="highlight routeros"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></div><div class="code"><pre><div class="line">String <span class="attribute">idVal</span>=<span class="string">"gf89f9a"</span>;</div><div class="line">Assert.assertEquals(<span class="literal">true</span>, <span class="attribute">0</span>==autoPartition.calculate(idVal));</div><div class="line"></div><div class="line"><span class="attribute">idVal</span>=<span class="string">"8df99a"</span>;</div><div class="line">Assert.assertEquals(<span class="literal">true</span>, <span class="attribute">4</span>==autoPartition.calculate(idVal));</div><div class="line"></div><div class="line"><span class="attribute">idVal</span>=<span class="string">"8dhdf99a"</span>;</div><div class="line">Assert.assertEquals(<span class="literal">true</span>, <span class="attribute">3</span>==autoPartition.calculate(idVal));</div></pre></div></div></figure>
+<h2 id="8-编程指定"><a href="#8-编程指定" class="headerlink" title="8.编程指定"></a>8.编程指定</h2><figure class="highlight xml"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></div><div class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">tableRule</span> <span class="attr">name</span>=<span class="string">"sharding-by-substring"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">rule</span>&gt;</span></div><div class="line">	    <span class="comment">&lt;!--标识将要分片的表字段--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">columns</span>&gt;</span>user_id<span class="tag">&lt;/<span class="name">columns</span>&gt;</span></div><div class="line">		<span class="comment">&lt;!--分片函数--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">algorithm</span>&gt;</span>sharding-by-substring<span class="tag">&lt;/<span class="name">algorithm</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">rule</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">tableRule</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"sharding-by-substring"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionDirectBySubString"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"startIndex"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span> <span class="comment">&lt;!-- zero-based --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"size"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionCount"</span>&gt;</span>8<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultPartition"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></div></div></figure>
+<p>此方法为直接根据字符子串（必须是数字）计算分区号（由应用传递参数，显式指定分区号）。<br>例如id=05-100000002<br>在此配置中代表根据id中从startIndex=0，开始，截取siz=2位数字即05，05就是获取的分区，如果没传默认分配到defaultPartition</p>
+<h2 id="9-字符串拆分hash解析"><a href="#9-字符串拆分hash解析" class="headerlink" title="9.字符串拆分hash解析"></a>9.字符串拆分hash解析</h2><figure class="highlight xml"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></div><div class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">tableRule</span> <span class="attr">name</span>=<span class="string">"sharding-by-stringhash"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">rule</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!--标识将要分片的表字段--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">columns</span>&gt;</span>user_id<span class="tag">&lt;/<span class="name">columns</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!--分片函数--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">algorithm</span>&gt;</span>sharding-by-stringhash<span class="tag">&lt;/<span class="name">algorithm</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">rule</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">tableRule</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"sharding-by-substring"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionDirectBySubString"</span>&gt;</span></div><div class="line">	<span class="comment">&lt;!--字符串hash求模基数--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">length</span>&gt;</span>512<span class="tag">&lt;/<span class="name">property</span>&gt;</span> <span class="comment">&lt;!-- zero-based --&gt;</span></div><div class="line">    <span class="comment">&lt;!--分区数--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"count"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--预算位--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"hashSlice"</span>&gt;</span>0:2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></div></div></figure>
+<p>hashSlice ： 0 means str.length(), -1 means str.length()-1</p>
+<figure class="highlight dts"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></div><div class="code"><pre><div class="line">&gt; <span class="string">"2"</span> -<span class="variable">&amp;gt</span>; (<span class="number">0</span>,<span class="number">2</span>)<span class="params">&lt;br/&gt;</span></div><div class="line">&gt; <span class="string">"1:2"</span> -<span class="variable">&amp;gt</span>; (<span class="number">1</span>,<span class="number">2</span>)<span class="params">&lt;br/&gt;</span></div><div class="line">&gt; <span class="string">"1:"</span> -<span class="variable">&amp;gt</span>; (<span class="number">1</span>,<span class="number">0</span>)<span class="params">&lt;br/&gt;</span></div><div class="line">&gt; <span class="string">"-1:"</span> -<span class="variable">&amp;gt</span>; (<span class="number">-1</span>,<span class="number">0</span>)<span class="params">&lt;br/&gt;</span></div><div class="line">&gt; <span class="string">":-1"</span> -<span class="variable">&amp;gt</span>; (<span class="number">0</span>,<span class="number">-1</span>)<span class="params">&lt;br/&gt;</span></div><div class="line">&gt; <span class="string">":"</span> -<span class="variable">&amp;gt</span>; (<span class="number">0</span>,<span class="number">0</span>)<span class="params">&lt;br/&gt;</span></div></pre></div></div></figure>
+<p>例子：</p>
+<figure class="highlight pf"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></div><div class="code"><pre><div class="line">String idVal=null;</div><div class="line"> <span class="keyword">rule</span>.<span class="built_in">set</span>PartitionLength(<span class="string">"512"</span>);</div><div class="line"> <span class="keyword">rule</span>.<span class="built_in">set</span>PartitionCount(<span class="string">"2"</span>);</div><div class="line"> <span class="keyword">rule</span>.init();</div><div class="line"> <span class="keyword">rule</span>.<span class="built_in">set</span>HashSlice(<span class="string">"0:2"</span>);</div><div class="line">//		idVal = <span class="string">"0"</span>;</div><div class="line">//		Assert.assertEquals(true, <span class="number">0</span> == <span class="keyword">rule</span>.calculate(idVal));</div><div class="line">//		idVal = <span class="string">"45a"</span>;</div><div class="line">//		Assert.assertEquals(true, <span class="number">1</span> == <span class="keyword">rule</span>.calculate(idVal));</div><div class="line"></div><div class="line"> </div><div class="line"> </div><div class="line">//last <span class="number">4</span></div><div class="line"><span class="keyword">rule</span> = new PartitionByString();</div><div class="line"><span class="keyword">rule</span>.<span class="built_in">set</span>PartitionLength(<span class="string">"512"</span>);</div><div class="line"><span class="keyword">rule</span>.<span class="built_in">set</span>PartitionCount(<span class="string">"2"</span>);</div><div class="line"><span class="keyword">rule</span>.init();</div><div class="line">//last <span class="number">4</span> characters</div><div class="line"><span class="keyword">rule</span>.<span class="built_in">set</span>HashSlice(<span class="string">"-4:0"</span>);</div><div class="line">idVal = <span class="string">"aaaabbb0000"</span>;</div><div class="line">Assert.assertEquals(true, <span class="number">0</span> == <span class="keyword">rule</span>.calculate(idVal));</div><div class="line">idVal = <span class="string">"aaaabbb2359"</span>;</div><div class="line">Assert.assertEquals(true, <span class="number">0</span> == <span class="keyword">rule</span>.calculate(idVal));</div></pre></div></div></figure>
+<h2 id="10-一致性hash"><a href="#10-一致性hash" class="headerlink" title="10. 一致性hash"></a>10. 一致性hash</h2><figure class="highlight xml"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></div><div class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">tableRule</span> <span class="attr">name</span>=<span class="string">"sharding-by-murmur"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">rule</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">columns</span>&gt;</span>user_id<span class="tag">&lt;/<span class="name">columns</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">algorithm</span>&gt;</span>murmur<span class="tag">&lt;/<span class="name">algorithm</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">rule</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">tableRule</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"murmur"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByMurmurHash"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"seed"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span><span class="comment">&lt;!-- 默认是0--&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"count"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span><span class="comment">&lt;!-- 要分片的数据库节点数量，必须指定，否则没法分片--&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"virtualBucketTimes"</span>&gt;</span>160<span class="tag">&lt;/<span class="name">property</span>&gt;</span><span class="comment">&lt;!-- 一个实际的数据库节点被映射为这么多虚拟节点，默认是160倍，也就是虚拟节点数是物理节点数的160倍--&gt;</span></div><div class="line">      <span class="comment">&lt;!--</span></div><div class="line"><span class="comment">      &lt;property name="weightMapFile"&gt;weightMapFile&lt;/property&gt;</span></div><div class="line"><span class="comment">                     节点的权重，没有指定权重的节点默认是1。以properties文件的格式填写，以从0开始到count-1的整数值也就是节点索引为key，以节点权重值为值。所有权重值必须是正整数，否则以1代替 --&gt;</span></div><div class="line">      <span class="comment">&lt;!--</span></div><div class="line"><span class="comment">      &lt;property name="bucketMapPath"&gt;/etc/mycat/bucketMapPath&lt;/property&gt;</span></div><div class="line"><span class="comment">                      用于测试时观察各物理节点与虚拟节点的分布情况，如果指定了这个属性，会把虚拟节点的murmur hash值与物理节点的映射按行输出到这个文件，没有默认值，如果不指定，就不会输出任何东西 --&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></div></div></figure>
+<p>一致性hash预算有效解决了分布式数据的扩容问题，前1-9中id规则都多少存在数据扩容难题，而10规则解决了数据扩容难点</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      Kionf
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://kionf.com/2017/05/07/mycat-alg/" title="Mycat分片规则">https://kionf.com/2017/05/07/mycat-alg/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Mycat/" rel="tag"># Mycat</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/14/mysql-sql/" rel="next" title="常用Mysql语句">
+                <i class="fa fa-chevron-left"></i> 常用Mysql语句
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/07/mysql-mycat/" rel="prev" title="Mycat分库分表">
+                Mycat分库分表 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kionf" />
+          <p class="site-author-name" itemprop="name">Kionf</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kalivim" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.freebuf.com/" title="FREEBUF" target="_blank">FREEBUF</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://paper.seebug.org/" title="SecPaper" target="_blank">SecPaper</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://kionf.com/edit/" title="MarkDown" target="_blank">MarkDown</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-枚举法："><span class="nav-text">1. 枚举法：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-固定分片hash算法"><span class="nav-text">2.固定分片hash算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-范围约定"><span class="nav-text">3.范围约定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-求模法"><span class="nav-text">4.求模法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-日期列分区法"><span class="nav-text">5.日期列分区法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-通配取模"><span class="nav-text">6.通配取模</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-ASCII码求模通配"><span class="nav-text">7. ASCII码求模通配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-编程指定"><span class="nav-text">8.编程指定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-字符串拆分hash解析"><span class="nav-text">9.字符串拆分hash解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-一致性hash"><span class="nav-text">10. 一致性hash</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="heart">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kionf</span>
+</div>
+
+
+<div class="powered-by">
+  什么样的人才能和时间成为朋友？
+</div>
+
+<div class="theme-info">
+  止于 -
+    源
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/motto.js"></script>
+
+<script type="text/javascript">
+  new Motto('.title', {
+    lyric: document.querySelector('.title').attributes['data-text'].value,
+    flashSpeed: 200,
+    flashTimeout: 1000
+  });
+</script>
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://kionf-com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://kionf.com/2017/05/07/mycat-alg/';
+          this.page.identifier = '2017/05/07/mycat-alg/';
+          this.page.title = 'Mycat分片规则';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://kionf-com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (search_path.endsWith("json")) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/codescrollbar.js"></script>
+<script type="text/javascript" src="/js/src/custom.js"></script>
+<script >
+	$(document).ready(
+	function()
+		{			
+			
+		}
+	);	
+</script>
+
+
+
+</body>
+</html>
