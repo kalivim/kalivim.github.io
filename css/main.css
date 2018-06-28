@@ -1702,7 +1702,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #9d4fff;
+  background: #ffff85;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2890,39 +2890,6 @@ pre .attr {
 }
 .highlight_back::-webkit-scrollbar-track:hover {
   background-color: rgba(255,255,255,0.15);
-}
-.Scrollbar-Track,
-.Scrollbar-Handle {
-  margin: 0;
-  border: 0;
-  padding: 0;
-  border-radius: 8px;
-  border-right: 1px solid transparent;
-  border-left: 1px solid transparent;
-}
-.Scrollbar-Track {
-  position: fixed;
-  bottom: 0px;
-  right: 0px;
-  width: 10px;
-  height: 10px;
-  background-color: rgba(0,0,0,0);
-}
-.Scrollbar-Track:hover,
-.Scrollbar-Trackhover {
-  background-color: rgba(0,0,0,0.15);
-}
-.Scrollbar-Handle {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 10px;
-  height: 10px;
-  background-color: rgba(0,0,0,0.2);
-}
-.Scrollbar-Handle:hover,
-.Scrollbar-Handlehover {
-  background-color: rgba(0,0,0,0.5);
 }
 .post-button .container {
   position: absolute;
