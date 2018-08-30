@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Ambari显示Heartbeat报错]]></title>
+    <url>%2F2018%2F08%2F30%2Fbigdata-ambari%2F</url>
+    <content type="text"><![CDATA[启动Ambari web 界面显示服务Heartbeat Lost, 查看Ambari agent日志报错 0x00Agent报错如下/var/log/ambari-agent/ambari-agent.logERROR 2015-09-23 09:47:07,402 NetUtil.py:77 - [Errno 8] _ssl.c:492: EOF occurred in violation of protocolERROR 2015-09-23 09:47:07,402 NetUtil.py:78 - SSLError: Failed to connect. Please check openssl library versions.Refer to: https://bugzilla.redhat.com/show_bug.cgi?id=1022468 for more details.WARNING 2015-09-23 09:47:07,402 NetUtil.py:105 - Server at https://ambari-server:8440is not reachable, sleeping for 10 seconds...WARNING 2015-09-23 09:47:07,402 NetUtil.py:105 - Server at https://ambari-server:8440is not reachable, sleeping for 10 seconds... 0x01解决办法1. 配置Ambari-agent强制https版本为TLSv1_2编辑/etc/ambari-agent/conf/ambari-agent.ini。 此为sed添加命令sed -i /\[security\]/a\/force_https_protocol=PROTOCOL_TLSv1_2 /etc/ambari-agent/conf/ambari-agent.ini 在[security]后添加如下内容: /etc/ambari-agent/conf/ambari-agent.ini123456789[security]force_https_protocol=PROTOCOL_TLSv1_2keysdir=/var/lib/ambari-agent/keysserver_crt=ca.crtpassphrase_env_var_name=AMBARI_PASSPHRASEssl_verify_cert=0credential_lib_dir=/var/lib/ambari-agent/cred/libcredential_conf_dir=/var/lib/ambari-agent/cred/confcredential_shell_cmd=org.apache.hadoop.security.alias.CredentialShell 2. 更改python配置关闭https验证编辑/etc/python/cert-verification.cfg 更改为verify=disable 此为sed更改命令sed -i 's/verify=.*/verify=disable/g' /etc/python/cert-verification.cfg /etc/python/cert-verification.cfg123[https]verify=platform_defaultverify=disable 0x02 重启agentservice ambari-agent restart 解决]]></content>
+      <categories>
+        <category>ErrorNote</category>
+      </categories>
+      <tags>
+        <tag>Ambari</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Zabbix电话报警]]></title>
     <url>%2F2018%2F07%2F06%2Fzabbix-alarm-phone%2F</url>
     <content type="text"><![CDATA[Zabbix 使用 twilio 进行免费电话报警, 免除企业认证繁琐步骤 0x00 注册 twilio 获取 api 调用key1. 注册账号 注册地址 Twilio-SignUp 需要翻墙 密码至少14个字符，不需要特殊字符 通过后 选择中国区, 验证手机号 创建项目名称(随便写) 2. 获取网络号码 初始配置地址 选择如下选项: 记住这个号码结果+18652052853后期会使用 到此就不用继续走剩下的几步了 其他自定义电话设置(默认不需要配置) 0x01 编辑zabbix调用API脚本 获取API_Key地址 Dashboard &gt;&gt; Settings &gt;&gt; General 获取ACCOUNT SID, AUTH TOKEN 注意: 试用账号只能打给 注册时使用的手机号!! 更改文件属主及权限chown zabbix:zabbix &amp;&amp; chmod +x zabbix_phone.py zabbix/alertscripts/zabbix_phone.py12345678910111213141516171819# -*- coding: utf-8 -*-#!/usr/bin/env pythonfrom twilio.rest import Client# Your Account Sid and Auth Token from twilio.com/consoleaccount_sid = 'your_sid'auth_token = 'your_token'client = Client(account_sid, auth_token)call = client.calls.create( url='https://demo.twilio.com/welcome/voice/', #注册使用的手机号 to='+8611111', #上面获取到的网络电话号码 from_='+19387770820' )print(call.sid) 执行文件测试, 返回一段id表示成功, 接到电话 0x02 配置zabbix1. 添加报警媒介 2. 连接到用户 3. 添加到动作 至此zabbix电话报警配置完成, 如果需要免费打给多个用户, 可以注册多个账号,添加多个媒介 然后 绑定到同一个动作中.]]></content>
