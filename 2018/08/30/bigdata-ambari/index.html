@@ -111,7 +111,7 @@
 <meta property="og:description" content="启动Ambari web 界面显示服务Heartbeat Lost,  查看Ambari agent日志报错">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://kionf.com/article_images/ambari-error.png">
-<meta property="og:updated_time" content="2018-08-30T10:45:10.665Z">
+<meta property="og:updated_time" content="2018-08-30T10:56:51.711Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ambari显示Heartbeat报错">
 <meta name="twitter:description" content="启动Ambari web 界面显示服务Heartbeat Lost,  查看Ambari agent日志报错">
@@ -418,16 +418,21 @@
 </blockquote>
 <a id="more"></a>
 <h1 id="0x00Agent报错如下"><a href="#0x00Agent报错如下" class="headerlink" title="0x00Agent报错如下"></a>0x00Agent报错如下</h1><figure class="highlight plain"><figcaption><span class="fileDir">/var/log/ambari-agent/</span><span class="caption">ambari-agent</span><span class="suffix">.log</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">ERROR 2015-09-23 09:47:07,402 NetUtil.py:77 - [Errno 8] _ssl.c:492: EOF occurred in violation of protocol</div><div class="line">ERROR 2015-09-23 09:47:07,402 NetUtil.py:78 - SSLError: Failed to connect. Please check openssl library versions.</div><div class="line">Refer to: https://bugzilla.redhat.com/show_bug.cgi?id=1022468 for more details.</div><div class="line">WARNING 2015-09-23 09:47:07,402 NetUtil.py:105 - Server at https://ambari-server:8440is not reachable, sleeping for 10 seconds...</div><div class="line">WARNING 2015-09-23 09:47:07,402 NetUtil.py:105 - Server at https://ambari-server:8440is not reachable, sleeping for 10 seconds...</div></pre></div></div></figure>
+<p><br></p>
 <h1 id="0x01解决办法"><a href="#0x01解决办法" class="headerlink" title="0x01解决办法"></a>0x01解决办法</h1><h2 id="1-配置Ambari-agent强制https版本为TLSv1-2"><a href="#1-配置Ambari-agent强制https版本为TLSv1-2" class="headerlink" title="1. 配置Ambari-agent强制https版本为TLSv1_2"></a>1. 配置Ambari-agent强制https版本为TLSv1_2</h2><p>编辑<code>/etc/ambari-agent/conf/ambari-agent.ini</code>。</p>
 <figure class="highlight bash"><figcaption><span class="caption">此为sed添加命令</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">sed -i /\[security\]/a\/force_https_protocol=PROTOCOL_TLSv1_2 /etc/ambari-agent/conf/ambari-agent.ini</div></pre></div></div></figure>
 <p>在<code>[security]</code>后添加如下内容:</p>
 <figure class="highlight xml"><figcaption><span class="fileDir">/etc/ambari-agent/conf/</span><span class="caption">ambari-agent</span><span class="suffix">.ini</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></div><div class="code"><pre><div class="line">[security]</div><div class="line diff-addition">force_https_protocol=PROTOCOL_TLSv1_2</div><div class="line">keysdir=/var/lib/ambari-agent/keys</div><div class="line">server_crt=ca.crt</div><div class="line">passphrase_env_var_name=AMBARI_PASSPHRASE</div><div class="line">ssl_verify_cert=0</div><div class="line">credential_lib_dir=/var/lib/ambari-agent/cred/lib</div><div class="line">credential_conf_dir=/var/lib/ambari-agent/cred/conf</div><div class="line">credential_shell_cmd=org.apache.hadoop.security.alias.CredentialShell</div></pre></div></div></figure>
-<h3 id="2-更改python配置关闭https验证"><a href="#2-更改python配置关闭https验证" class="headerlink" title="2. 更改python配置关闭https验证"></a>2. 更改python配置关闭https验证</h3><p>编辑<code>/etc/python/cert-verification.cfg</code> 更改为<code>verify=disable</code></p>
+<h2 id="2-更改python配置关闭https验证"><a href="#2-更改python配置关闭https验证" class="headerlink" title="2. 更改python配置关闭https验证"></a>2. 更改python配置关闭https验证</h2><p>编辑<code>/etc/python/cert-verification.cfg</code> 更改为<code>verify=disable</code></p>
 <figure class="highlight bash"><figcaption><span class="caption">此为sed更改命令</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">sed -i <span class="string">'s/verify=.*/verify=disable/g'</span> /etc/python/cert-verification.cfg</div></pre></div></div></figure>
 <figure class="highlight plain"><figcaption><span class="fileDir">/etc/python/</span><span class="caption">cert-verification</span><span class="suffix">.cfg</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></div><div class="code"><pre><div class="line">[https]</div><div class="line diff-deletion">verify=platform_default</div><div class="line diff-addition">verify=disable</div></pre></div></div></figure>
+<p><br></p>
 <h1 id="0x02-重启agent"><a href="#0x02-重启agent" class="headerlink" title="0x02 重启agent"></a>0x02 重启agent</h1><p><code>service ambari-agent restart</code></p>
-<blockquote>
-<p>解决</p>
+<div class="note warning"><p>解决</p>
+</div>
+<p><br></p>
+<h1 id="0x03-原因"><a href="#0x03-原因" class="headerlink" title="0x03 原因"></a>0x03 原因</h1><blockquote>
+<p>由于ambari server 端使用JDK1.7启动， 与openssl存在Bug， 更改如上配置文件，更改ssl版本，关闭python https校验.</p>
 </blockquote>
 
       
@@ -663,7 +668,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00Agent报错如下"><span class="nav-text">0x00Agent报错如下</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01解决办法"><span class="nav-text">0x01解决办法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-配置Ambari-agent强制https版本为TLSv1-2"><span class="nav-text">1. 配置Ambari-agent强制https版本为TLSv1_2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-更改python配置关闭https验证"><span class="nav-text">2. 更改python配置关闭https验证</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-重启agent"><span class="nav-text">0x02 重启agent</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00Agent报错如下"><span class="nav-text">0x00Agent报错如下</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01解决办法"><span class="nav-text">0x01解决办法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-配置Ambari-agent强制https版本为TLSv1-2"><span class="nav-text">1. 配置Ambari-agent强制https版本为TLSv1_2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-更改python配置关闭https验证"><span class="nav-text">2. 更改python配置关闭https验证</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-重启agent"><span class="nav-text">0x02 重启agent</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-原因"><span class="nav-text">0x03 原因</span></a></li></ol></div>
             
 
           </div>
