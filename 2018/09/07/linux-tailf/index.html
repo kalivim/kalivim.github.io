@@ -111,7 +111,7 @@
 <meta property="og:description" content="对于小文件 (大约小于5GB) 使用tailf， tail -f 没有明显区别。 一次偶然使用tailf查看一个20GB日志文件时， 发现无法显示， 而使用tail -f却可以显示。由此延伸出本文">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://kionf.com/article_images/linux_tailf.jpg">
-<meta property="og:updated_time" content="2018-09-07T12:01:08.402Z">
+<meta property="og:updated_time" content="2018-09-07T12:02:41.900Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tailf 和 tail -f 区别">
 <meta name="twitter:description" content="对于小文件 (大约小于5GB) 使用tailf， tail -f 没有明显区别。 一次偶然使用tailf查看一个20GB日志文件时， 发现无法显示， 而使用tail -f却可以显示。由此延伸出本文">
@@ -430,10 +430,10 @@
 <p><br></p>
 <figure class="highlight shell"><figcaption><span class="caption">test 文件信息</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></div><div class="code"><pre><div class="line">  文件："test"</div><div class="line">  大小：5         	块：8          IO 块：4096   普通文件</div><div class="line">设备：fd01h/64769d	Inode：138235      硬链接：1</div><div class="line">权限：(0644/-rw-r--r--)  Uid：(    0/    root)   Gid：(    0/    root)</div><div class="line">最近访问：2018-09-07 17:59:24.842451394 +0800</div><div class="line">最近更改：2018-09-07 17:59:19.175452013 +0800</div><div class="line">最近改动：2018-09-07 17:59:19.175452013 +0800</div><div class="line">创建时间：-</div></pre></div></div></figure>
 <p><br></p>
-<p>查看strace追踪文件，分析区别</p>
+<h1 id="0x02-区别："><a href="#0x02-区别：" class="headerlink" title="0x02 区别："></a>0x02 区别：</h1><p>查看strace追踪文件，分析区别</p>
 <figure class="highlight shell"><figcaption><span class="caption">tailf流程</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></div><div class="code"><pre><div class="line">1. 使用stat函数获取文件名，fstat通过文件名获取文件 IO block 信息 4096</div><div class="line">2. read(3, "test\n", 4096)  = 5 #使用read函数从磁盘地址 4096 开始读取文件读取5字节文件大小</div></pre></div></div></figure>
 <figure class="highlight shell"><figcaption><span class="caption">tail -f 流程</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></div><div class="code"><pre><div class="line">1. 使用fstat函数获取文件描述符信息，获取seek</div><div class="line"></div><div class="line">  lseek(3, 0, SEEK_CUR)               = 0 #开始seek</div><div class="line">  lseek(3, 0, SEEK_END)               = 5 #结束seek</div><div class="line">  lseek(3, 0, SEEK_SET)               = 0 #当前seek位置</div><div class="line"></div><div class="line">2. seek设置到SEEK_END位置，read函数从末尾读取文件</div><div class="line"></div><div class="line">  read(3, "test\n", 5)                    = 5</div><div class="line">  lseek(3, 0, SEEK_SET)                   = 0</div></pre></div></div></figure>
-<h1 id="0x02-区别："><a href="#0x02-区别：" class="headerlink" title="0x02 区别："></a>0x02 区别：</h1><blockquote>
+<blockquote>
 <p>tailf &gt;&gt;&gt; <code>stat()</code>获取到文件block位置及大小，<code>read()</code>头开始读取<br>tail -f &gt;&gt;&gt; <code>fstat()</code>获取文件描述符，<code>lseek()</code>函数<code>SEEK_SET</code>移动到文件末尾<code>read()</code>进行读取</p>
 </blockquote>
 
