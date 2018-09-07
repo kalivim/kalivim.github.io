@@ -441,15 +441,15 @@
 <h2 id="3-配置Postgresql"><a href="#3-配置Postgresql" class="headerlink" title="3. 配置Postgresql"></a>3. 配置Postgresql</h2><h3 id="1-添加数据库，用户"><a href="#1-添加数据库，用户" class="headerlink" title="(1)添加数据库，用户"></a>(1)添加数据库，用户</h3><p><strong>初始化启动 :</strong></p>
 <p><code>service postgresql initdb</code></p>
 <p><code>service postgresql start</code></p>
-<figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></div><div class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">切换到普通用户</span></div><div class="line">su - postgres</div><div class="line"></div><div class="line"><span class="meta">#</span><span class="bash">创建数据库和用户</span></div><div class="line">psql</div><div class="line"></div><div class="line">postgres=# create user "youruser" with password 'yourpasswd' nocreatedb;</div><div class="line">CREATE ROLE</div><div class="line"></div><div class="line">postgres=# create database "msf4" with owner="youruser";</div><div class="line">CREATE DATABASE</div><div class="line"></div><div class="line">postgres=# \q</div><div class="line">退出</div></pre></div></div></figure>
+<figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></div><div class="code"><pre><div class="line"><span class="meta">#</span>切换到普通用户</div><div class="line">su - postgres</div><div class="line"></div><div class="line"><span class="meta">#</span>创建数据库和用户</div><div class="line">psql</div><div class="line"></div><div class="line">postgres=# create user "youruser" with password 'yourpasswd' nocreatedb;</div><div class="line">CREATE ROLE</div><div class="line"></div><div class="line">postgres=# create database "msf4" with owner="youruser";</div><div class="line">CREATE DATABASE</div><div class="line"></div><div class="line">postgres=# \q</div><div class="line">退出</div></pre></div></div></figure>
 <h3 id="2-修改服务配置文件"><a href="#2-修改服务配置文件" class="headerlink" title="(2)修改服务配置文件"></a>(2)修改服务配置文件</h3><p><code>切换回root</code></p>
 <p><code>vim /var/lib/pgsql/data/postgresql.conf</code></p>
 <blockquote>
 <p>在我的机器上是这个文件，有可能会不同，名字一样自行查找</p>
 </blockquote>
-<figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></div><div class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">共修改2处</span></div><div class="line"></div><div class="line">更改 #listen_addresses = 'localhost'</div><div class="line">为 listen_addresses = '127.0.0.1'</div><div class="line"></div><div class="line">更改 #password_encryption = on</div><div class="line">为 password_encryption = on</div></pre></div></div></figure>
+<figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></div><div class="code"><pre><div class="line"><span class="meta">#</span>共修改2处</div><div class="line"></div><div class="line">更改 #listen_addresses = 'localhost'</div><div class="line">为 listen_addresses = '127.0.0.1'</div><div class="line"></div><div class="line">更改 #password_encryption = on</div><div class="line">为 password_encryption = on</div></pre></div></div></figure>
 <p><code>vim /var/lib/pgsql/data/pg_hba.conf</code></p>
-<figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></div><div class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">文件末尾处</span></div><div class="line">更改 host    all         all         127.0.0.1/32          ident</div><div class="line">为 host    all         all         127.0.0.1/32          md5</div></pre></div></div></figure>
+<figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></div><div class="code"><pre><div class="line"><span class="meta">#</span>文件末尾处</div><div class="line">更改 host    all         all         127.0.0.1/32          ident</div><div class="line">为 host    all         all         127.0.0.1/32          md5</div></pre></div></div></figure>
 <h3 id="3-重启服务"><a href="#3-重启服务" class="headerlink" title="(3)重启服务"></a>(3)重启服务</h3><p><code>service postgresql restart</code></p>
 <p><code>psql -U youruser -h 127.0.0.1 -dmsf4</code></p>
 <p><strong>测试是否配置成功</strong></p>
@@ -532,8 +532,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/12/15/linux-pip/" rel="prev" title="更改pip源为国内阿里源">
-                更改pip源为国内阿里源 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/12/15/errornote-ss/" rel="prev" title="ShadowSocks启动报错undefined symbol EVP_CIPHER_CTX_cleanup">
+                ShadowSocks启动报错undefined symbol EVP_CIPHER_CTX_cleanup <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -613,7 +613,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -635,7 +635,7 @@
             
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>

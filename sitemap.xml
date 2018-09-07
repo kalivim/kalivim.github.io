@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://kionf.com/2018/09/07/linux-tailf/</loc>
+    
+    <lastmod>2018-09-07T11:51:06.739Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://kionf.com/2018/08/30/bigdata-ambari/</loc>
     
     <lastmod>2018-08-30T11:01:39.973Z</lastmod>
@@ -128,13 +135,6 @@
   </url>
   
   <url>
-    <loc>https://kionf.com/2016/12/30/kali-tools/</loc>
-    
-    <lastmod>2017-06-09T02:45:50.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://kionf.com/2016/05/12/linux-kickstart/</loc>
     
     <lastmod>2017-06-09T02:45:50.000Z</lastmod>
@@ -142,7 +142,14 @@
   </url>
   
   <url>
-    <loc>https://kionf.com/2016/12/15/errornote-ss/</loc>
+    <loc>https://kionf.com/2016/12/30/kali-tools/</loc>
+    
+    <lastmod>2017-06-09T02:45:50.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://kionf.com/2015/07/02/linux-vpn/</loc>
     
     <lastmod>2017-06-09T02:45:50.000Z</lastmod>
     
@@ -191,7 +198,7 @@
   </url>
   
   <url>
-    <loc>https://kionf.com/2015/07/02/linux-vpn/</loc>
+    <loc>https://kionf.com/2016/12/15/errornote-ss/</loc>
     
     <lastmod>2017-06-09T02:45:50.000Z</lastmod>
     
