@@ -111,7 +111,7 @@
 <meta property="og:description" content="对于小文件 (大约小于5GB) 使用tailf， tail -f 没有明显区别。 一次偶然使用tailf查看一个20GB日志文件时， 发现无法显示， 而使用tail -f却可以显示。由此延伸出本文">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://kionf.com/article_images/linux_tailf.jpg">
-<meta property="og:updated_time" content="2018-09-08T02:43:49.295Z">
+<meta property="og:updated_time" content="2018-09-08T03:53:29.177Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tailf 和 tail -f 区别">
 <meta name="twitter:description" content="对于小文件 (大约小于5GB) 使用tailf， tail -f 没有明显区别。 一次偶然使用tailf查看一个20GB日志文件时， 发现无法显示， 而使用tail -f却可以显示。由此延伸出本文">
@@ -418,8 +418,8 @@
 <a id="more"></a>
 <h1 id="0x00-准备实验环境"><a href="#0x00-准备实验环境" class="headerlink" title="0x00 准备实验环境"></a>0x00 准备实验环境</h1><p><br></p>
 <p>尝试直接<code>google</code>两者的区别发现大部分说的不是很详细，抄的也不是很好。所以自己写下来做个笔记。</p>
-<h2 id="1-生成大文件10GB"><a href="#1-生成大文件10GB" class="headerlink" title="1. 生成大文件10GB"></a>1. 生成大文件10GB</h2><figure class="highlight shell"><figcaption><span class="caption">使用dd生成指定大小文件</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">dd if=/dev/urandom of=bigFile bs=10M count=1000</div></pre></div></div></figure>
-<h2 id="2-安装strace跟踪进程中的系统调用"><a href="#2-安装strace跟踪进程中的系统调用" class="headerlink" title="2. 安装strace跟踪进程中的系统调用"></a>2. 安装<code>strace</code>跟踪进程中的系统调用</h2><figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">yum -y install strace</div></pre></div></div></figure>
+<h2 id="1-生成大文件10GB"><a href="#1-生成大文件10GB" class="headerlink" title="1. 生成大文件10GB"></a>1. 生成大文件10GB</h2><figure class="highlight bash"><figcaption><span class="caption">使用dd生成指定大小文件</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">dd <span class="keyword">if</span>=/dev/urandom of=bigFile bs=10M count=1000</div></pre></div></div></figure>
+<h2 id="2-安装strace跟踪进程中的系统函数调用"><a href="#2-安装strace跟踪进程中的系统函数调用" class="headerlink" title="2. 安装strace跟踪进程中的系统函数调用"></a>2. 安装<code>strace</code>跟踪进程中的系统函数调用</h2><figure class="highlight bash"><div class="figcode"><div class="code"><pre><div class="line">yum -y install strace</div></pre></div></div></figure>
 <h2 id="3-测试载入时间"><a href="#3-测试载入时间" class="headerlink" title="3. 测试载入时间"></a>3. 测试载入时间</h2><p>分别使用 <code>tailf</code>，<code>tail -f</code>查看刚才生成的文件，明显感觉<code>tailf</code>比<code>tail -f</code>时间长</p>
 <p><br></p>
 <h1 id="0x01-分析两者使用过程中系统调用区别"><a href="#0x01-分析两者使用过程中系统调用区别" class="headerlink" title="0x01 分析两者使用过程中系统调用区别"></a>0x01 分析两者使用过程中系统调用区别</h1><figure class="highlight shell"><figcaption><span class="caption">环境准备</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></div><div class="code"><pre><div class="line">echo "test" &gt; test</div><div class="line"></div><div class="line"><span class="meta">#</span><span class="bash"> 追踪tailf</span></div><div class="line">strace -o trace_tailf tailf test</div><div class="line"></div><div class="line"><span class="meta">#</span><span class="bash"> 追踪tail -f</span></div><div class="line">strace -o trace_tail_f tail -f test</div></pre></div></div></figure>
@@ -430,11 +430,31 @@
 <p><br></p>
 <figure class="highlight shell"><figcaption><span class="caption">test 文件信息</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></div><div class="code"><pre><div class="line">  文件："test"</div><div class="line">  大小：5         	块：8          IO 块：4096   普通文件</div><div class="line">设备：fd01h/64769d	Inode：138235      硬链接：1</div><div class="line">权限：(0644/-rw-r--r--)  Uid：(    0/    root)   Gid：(    0/    root)</div><div class="line">最近访问：2018-09-07 17:59:24.842451394 +0800</div><div class="line">最近更改：2018-09-07 17:59:19.175452013 +0800</div><div class="line">最近改动：2018-09-07 17:59:19.175452013 +0800</div><div class="line">创建时间：-</div></pre></div></div></figure>
 <p><br></p>
-<h1 id="0x02-区别"><a href="#0x02-区别" class="headerlink" title="0x02 区别"></a>0x02 区别</h1><p>查看strace追踪文件，分析区别</p>
-<figure class="highlight shell"><figcaption><span class="caption">tailf流程</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></div><div class="code"><pre><div class="line">1. 使用stat函数获取文件名，fstat通过文件名获取文件 IO block 信息 4096</div><div class="line">2. read(3, "test\n", 4096)  = 5 #使用read函数从磁盘地址 4096 开始读取文件读取5字节文件大小</div></pre></div></div></figure>
-<figure class="highlight shell"><figcaption><span class="caption">tail -f 流程</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></div><div class="code"><pre><div class="line">1. 使用fstat函数获取文件描述符信息，获取seek</div><div class="line"></div><div class="line">  lseek(3, 0, SEEK_CUR)               = 0 #开始seek</div><div class="line">  lseek(3, 0, SEEK_END)               = 5 #结束seek</div><div class="line">  lseek(3, 0, SEEK_SET)               = 0 #当前seek位置</div><div class="line"></div><div class="line">2. seek设置到SEEK_END位置，read函数从末尾读取文件</div><div class="line"></div><div class="line">  read(3, "test\n", 5)                    = 5</div><div class="line">  lseek(3, 0, SEEK_SET)                   = 0</div></pre></div></div></figure>
+<h1 id="0x02-区别"><a href="#0x02-区别" class="headerlink" title="0x02 区别"></a>0x02 区别</h1><h2 id="1-调用函数区别"><a href="#1-调用函数区别" class="headerlink" title="1. 调用函数区别"></a>1. 调用函数区别</h2><p>使用strace追踪命令的系统函数调用导出文件，分析区别</p>
+<figure class="highlight shell"><figcaption><span class="caption">tailf 流程</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">1. 使用stat函数获取文件名，fstat通过文件名获取文件 IO block 信息 4096</div><div class="line">2. read(3, "test\n", 4096)  = 5 #使用read函数从磁盘地址 4096 开始读取文件读取5字节文件大小</div></pre></div></div></figure>
+<figure class="highlight shell"><figcaption><span class="caption">tail -f 流程</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">1. 使用fstat函数获取文件描述符信息，获取seek</div><div class="line"></div><div class="line">  lseek(3, 0, SEEK_CUR)               = 0 #开始seek</div><div class="line">  lseek(3, 0, SEEK_END)               = 5 #结束seek</div><div class="line">  lseek(3, 0, SEEK_SET)               = 0 #当前seek位置</div><div class="line"></div><div class="line">2. seek设置到SEEK_END位置，read函数从末尾读取文件</div><div class="line"></div><div class="line">  read(3, "test\n", 5)                    = 5</div><div class="line">  lseek(3, 0, SEEK_SET)                   = 0</div></pre></div></div></figure>
+<p>通过系统函数调用分析得出区别：</p>
+<figure class="highlight bash"><div class="figcode"><div class="code"><pre><div class="line">`tailf`    :  </div><div class="line">       调用系统函数`<span class="built_in">stat</span>()`通过获取到的文件名，查看block位置及大小，`<span class="built_in">read</span>()`从头开始载入指定文件大小块,进行读取</div><div class="line"></div><div class="line">`tail -f`  :  </div><div class="line">       调用系统函数`fstat()`获取文件描述符，`lseek()`函数`SEEK_SET`方法移动文件指针到末尾，从末尾`<span class="built_in">read</span>()`进行读取</div></pre></div></div></figure>
+<p>系统函数对比：</p>
+<p><br></p>
+<figure class="highlight shell"><figcaption><span class="caption">stat(),fstat()</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">系统函数：</div><div class="line"></div><div class="line">  stat()：通过文件名获取文件信息</div><div class="line">  fstat()：通过文件描述符获取文件信息</div><div class="line"></div><div class="line">两者区别：</div><div class="line">  获取文件信息方式不同</div><div class="line"></div><div class="line">安全问题:</div><div class="line">  当使用stat()获取文件并打开它时，文件可能会被修改（或权限被更改），或者被符号链接替，fstat()避免了这个问题。</div></pre></div></div></figure>
+<p><br></p>
+<h2 id="2-调用函数不同，延伸出的区别"><a href="#2-调用函数不同，延伸出的区别" class="headerlink" title="2. 调用函数不同，延伸出的区别"></a>2. 调用函数不同，延伸出的区别</h2><p>开两个窗口，一个窗口tailf文件，另一个窗口操作文件</p>
+<figure class="highlight shell"><figcaption><span class="caption">[窗口1]>tailf，tail -f 文件</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">tailf test</div><div class="line"><span class="meta">#</span><span class="bash"> 执行rm，mv 命令后tailf退出查看文件状态</span></div><div class="line"></div><div class="line">tail -f test</div><div class="line"><span class="meta">#</span><span class="bash"> 执行mv 命令后tail -f继续查看文件，(文件名称改变，文件描述符不变)</span></div><div class="line"><span class="meta">#</span><span class="bash"> 执行rm 命令后tailf -f继续查看文件，重新创建相同文件名仍然无法查看(因为文件的描述符已经改变)</span></div></pre></div></div></figure>
+<figure class="highlight shell"><figcaption><span class="caption">[窗口]2>更改，删除文件</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">rm test</div><div class="line">mv test test.bak</div><div class="line">echo "dddd" &gt; test</div></pre></div></div></figure>
 <blockquote>
-<p>tailf &gt;&gt;&gt; 调用系统函数<code>stat()</code>通过获取到的文件名，查看block位置及大小，<code>read()</code>从头开始载入指定文件大小块,进行读取<br>tail -f &gt;&gt;&gt; 调用系统函数<code>fstat()</code>获取文件描述符，<code>lseek()</code>函数<code>SEEK_SET</code>方法移动文件指针到末尾，从末尾<code>read()</code>进行读取<br>由于获取文件方式不同(<code>stat</code>,<code>fstat</code>)，导致当查看文件被删除时，<code>tailf</code>可以获取到，<code>tail -f</code>获取不到。</p>
+<p>由于获取文件信息方式不同(<code>stat</code>通过文件名,<code>fstat</code>通过文件描述符)，导致当查看文件被删除时，<code>tailf</code>可以获取到文件被删除，<code>tail -f</code>获取不到。</p>
+</blockquote>
+<blockquote>
+<p>由于<code>tail -f</code>使用文件描述符，所以即使查看过程中文件名更改<code>tail -f</code>依旧可以获取到文件内容，而<code>tailf</code> 则无法继续查看文件。</p>
+</blockquote>
+<p>共同点：</p>
+<blockquote>
+<p>打印文件后10行，文件增长读取文件。通过linux<code>stat</code>命令查看文件信息，<code>tailf</code>和<code>tail -f</code>首次访问会改变文件访问时间，如果文件未改变则不会刷新文件访问时间，文件内容改变会再次访问文件并刷新文件访问时间。</p>
+</blockquote>
+<p><br></p>
+<blockquote>
+<p><strong>参考：</strong><br><a href="https://linux.die.net/man/2/fstat" target="_blank" rel="noopener">stat_and_fstat</a><br><a href="https://linux.die.net/man/1/tailf" target="_blank" rel="noopener">tailf</a><br><a href="https://linux.die.net/man/1/tail" target="_blank" rel="noopener">tail</a></p>
 </blockquote>
 
       
@@ -670,7 +690,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-准备实验环境"><span class="nav-text">0x00 准备实验环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-生成大文件10GB"><span class="nav-text">1. 生成大文件10GB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-安装strace跟踪进程中的系统调用"><span class="nav-text">2. 安装strace跟踪进程中的系统调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-测试载入时间"><span class="nav-text">3. 测试载入时间</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-分析两者使用过程中系统调用区别"><span class="nav-text">0x01 分析两者使用过程中系统调用区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-区别"><span class="nav-text">0x02 区别</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-准备实验环境"><span class="nav-text">0x00 准备实验环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-生成大文件10GB"><span class="nav-text">1. 生成大文件10GB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-安装strace跟踪进程中的系统函数调用"><span class="nav-text">2. 安装strace跟踪进程中的系统函数调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-测试载入时间"><span class="nav-text">3. 测试载入时间</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-分析两者使用过程中系统调用区别"><span class="nav-text">0x01 分析两者使用过程中系统调用区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-区别"><span class="nav-text">0x02 区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-调用函数区别"><span class="nav-text">1. 调用函数区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-调用函数不同，延伸出的区别"><span class="nav-text">2. 调用函数不同，延伸出的区别</span></a></li></ol></li></ol></div>
             
 
           </div>
