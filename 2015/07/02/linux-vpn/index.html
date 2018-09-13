@@ -443,7 +443,7 @@
 <figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">net.ipv4.ip_forward=1</div></pre></div></div></figure>
 <h2 id="6、打开IP转发功能"><a href="#6、打开IP转发功能" class="headerlink" title="6、打开IP转发功能"></a>6、打开IP转发功能</h2><figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line"><span class="built_in">echo</span> 1 &gt; /proc/sys/net/ipv4/ip_forward</div></pre></div></div></figure>
 <h2 id="7、设置iptables"><a href="#7、设置iptables" class="headerlink" title="7、设置iptables"></a>7、设置iptables</h2><figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">iptables -t nat -I POSTROUTING -j MASQUERADE</div></pre></div></div></figure>
-<h2 id="8、-启动服务"><a href="#8、-启动服务" class="headerlink" title="8、 启动服务"></a>8、 启动服务</h2><figure class="highlight awk"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line"><span class="regexp">/etc/i</span>nit.d<span class="regexp">/pptpd restart</span></div></pre></div></div></figure>
+<h2 id="8、-启动服务"><a href="#8、-启动服务" class="headerlink" title="8、 启动服务"></a>8、 启动服务</h2><figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">/etc/init.d/pptpd restart</div></pre></div></div></figure>
 <blockquote>
 <p>VPN搭建完毕，可以尝试用客户端登录了。pptpd监听端口号为<code>1723</code></p>
 </blockquote>
