@@ -112,7 +112,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://kionf.com/article_images/meterpreter-01.jpg">
 <meta property="og:image" content="https://kionf.com/article_images/meterpreter-02.jpg">
-<meta property="og:updated_time" content="2018-09-13T06:57:55.949Z">
+<meta property="og:updated_time" content="2018-09-13T07:01:48.641Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于 meterpreter 持久化问题研究">
 <meta name="twitter:description" content="meterperter 获取到Session时如果当前session退出，就不会在自动连接，使用常见持久化也只是在远程用户登录，或者远程机器重启时才会返回session。今天主要介绍persistence脚本的自定义配置，来实现如果session断开，客户端定时重新尝试连接服务端(msf端)">
@@ -437,7 +437,7 @@
 <figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></div><div class="code"><pre><div class="line">msf&gt; session -i 6</div><div class="line"></div><div class="line">[*] Starting interaction with 6...</div><div class="line"></div><div class="line">meterpreter &gt;</div></pre></div></div></figure>
 <hr>
 
-<h1 id="0x01-persistence脚本持久化"><a href="#0x01-persistence脚本持久化" class="headerlink" title="0x01 persistence脚本持久化"></a>0x01 <code>persistence</code>脚本持久化</h1><p><br></p>
+<h1 id="0x01-persistence脚本持久化"><a href="#0x01-persistence脚本持久化" class="headerlink" title="0x01 persistence脚本持久化"></a>0x01 persistence脚本持久化</h1><p><br></p>
 <p>当使用<code>run persistence</code>进行持久化时默认远程路径会推送到<code>%TEMP%</code>(“c:\users\appdata\local\temp\“)。当用户重启或者temp目录下存在数字id，<code>persistence</code>持久化就会出错。</p>
 <div class="note dange"><p>metasploit 新版本一部推荐使用此脚本，并且使用<code>run persistence -h</code> 查看选项信息时会办错，所以分析直接脚本文件</p>
 </div>
