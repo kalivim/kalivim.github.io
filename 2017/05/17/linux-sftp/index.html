@@ -105,15 +105,15 @@
 <meta name="description" content="SFTP，即 SSH 文件传输协议，或者说是安全文件传输协议, 通过SSH端口加密传输。但是，由于这种传输方式使用了加密/解密技术，所以传输效率比普通的FTP要低得多。SFTP的优势在于SSH软件包中包含SFTP（无需额外安装），iptables无需添加额外端口，配置方便">
 <meta name="keywords" content="sftp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="sftp锁定用户根目录配置详解">
+<meta property="og:title" content="禁用用户SSH登陆，SFTP锁定指定目录配置详解">
 <meta property="og:url" content="https://kionf.com/2017/05/17/linux-sftp/index.html">
 <meta property="og:site_name" content="Kionf">
 <meta property="og:description" content="SFTP，即 SSH 文件传输协议，或者说是安全文件传输协议, 通过SSH端口加密传输。但是，由于这种传输方式使用了加密/解密技术，所以传输效率比普通的FTP要低得多。SFTP的优势在于SSH软件包中包含SFTP（无需额外安装），iptables无需添加额外端口，配置方便">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://kionf.com/article_images/stfp.png">
-<meta property="og:updated_time" content="2017-06-21T08:57:04.000Z">
+<meta property="og:updated_time" content="2018-09-20T03:43:11.077Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="sftp锁定用户根目录配置详解">
+<meta name="twitter:title" content="禁用用户SSH登陆，SFTP锁定指定目录配置详解">
 <meta name="twitter:description" content="SFTP，即 SSH 文件传输协议，或者说是安全文件传输协议, 通过SSH端口加密传输。但是，由于这种传输方式使用了加密/解密技术，所以传输效率比普通的FTP要低得多。SFTP的优势在于SSH软件包中包含SFTP（无需额外安装），iptables无需添加额外端口，配置方便">
 <meta name="twitter:image" content="https://kionf.com/article_images/stfp.png">
 
@@ -149,7 +149,7 @@
 
 
 
-  <title>sftp锁定用户根目录配置详解 | Kionf</title>
+  <title>禁用用户SSH登陆，SFTP锁定指定目录配置详解 | Kionf</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -328,7 +328,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">sftp锁定用户根目录配置详解</h2>
+          <h2 class="post-title" itemprop="name headline">禁用用户SSH登陆，SFTP锁定指定目录配置详解</h2>
         
 
         <div class="post-meta">
@@ -440,7 +440,8 @@
 <h2 id="修改锁定用户目录的权限"><a href="#修改锁定用户目录的权限" class="headerlink" title="修改锁定用户目录的权限"></a>修改锁定用户目录的权限</h2><figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></div><div class="code"><pre><div class="line"><span class="comment">#所有者设置为了root，所有组设置为sftp</span></div><div class="line">chown root:sftp /data/<span class="built_in">test</span></div><div class="line"><span class="comment">#权限设置为755，所有者root有写入权限，而所有组sftp无写入权限</span></div><div class="line">chmod -R 755 /data/<span class="built_in">test</span></div></pre></div></div></figure>
 <div class="note danger"><p>目录的权限设定有两个要点：<br>1、由ChrootDirectory指定的目录开始一直往上到系统根目录为止的目录拥有者都只能是root<br>2、由ChrootDirectory指定的目录开始一直往上到系统根目录为止都不可以具有群组写入权限（最大权限为755）</p>
 </div>
-<h2 id="添加上传目录"><a href="#添加上传目录" class="headerlink" title="添加上传目录"></a>添加上传目录</h2><figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></div><div class="code"><pre><div class="line">mkdir /data/test/upload</div><div class="line">chown user:sftp /data/test/upload</div><div class="line">#允许user用户有读写权限，群组外用户无写入权限</div><div class="line">chmod 755 /data/test/upload</div></pre></div></div></figure>
+<h2 id="添加可上传删除目录"><a href="#添加可上传删除目录" class="headerlink" title="添加可上传删除目录"></a>添加可上传删除目录</h2><figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></div><div class="code"><pre><div class="line">mkdir /data/test/upload</div><div class="line">chown user:sftp /data/test/upload</div><div class="line">#允许user用户有读写权限，群组外用户无写入权限</div><div class="line">chmod 755 /data/test/upload</div></pre></div></div></figure>
+<figure class="highlight bash"><figcaption><span class="caption">此时目录权限结构</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">drwxr-xr-x  19 root sftp      4096 9月   4 17:52 /data/<span class="built_in">test</span></div><div class="line marked"><span class="built_in">test</span>目录下，user用户可读不可写</div><div class="line"></div><div class="line">drwxr-xr-x  4  user sftp      4096 9月  28 12:02 /data/<span class="built_in">test</span>/upload</div><div class="line marked">upload目录下，user用户可进行读写操作</div></pre></div></div></figure>
 <figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></div><div class="code"><pre><div class="line">#重启SSHD使配置生效</div><div class="line">service sshd restart</div></pre></div></div></figure>
 <h1 id="0x02-使用xftp测试连接"><a href="#0x02-使用xftp测试连接" class="headerlink" title="0x02 使用xftp测试连接"></a>0x02 使用xftp测试连接</h1><span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_images/stfp.png" class="full-image" alt="alt" title="xstfp"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
 
@@ -471,7 +472,7 @@
     </li>
     <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://kionf.com/2017/05/17/linux-sftp/" title="sftp锁定用户根目录配置详解">https://kionf.com/2017/05/17/linux-sftp/</a>
+      <a href="https://kionf.com/2017/05/17/linux-sftp/" title="禁用用户SSH登陆，SFTP锁定指定目录配置详解">https://kionf.com/2017/05/17/linux-sftp/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明： </strong>
@@ -681,7 +682,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-添加用户"><span class="nav-text">0x00 添加用户</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#添加组"><span class="nav-text">添加组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再添加账户"><span class="nav-text">再添加账户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询用户是否添加到组"><span class="nav-text">查询用户是否添加到组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置密码"><span class="nav-text">设置密码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-修改sshd-config配置文件"><span class="nav-text">0x01 修改sshd_config配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编辑配置文件：-etc-ssh-sshd-config"><span class="nav-text">编辑配置文件：/etc/ssh/sshd_config</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改锁定用户目录的权限"><span class="nav-text">修改锁定用户目录的权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加上传目录"><span class="nav-text">添加上传目录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-使用xftp测试连接"><span class="nav-text">0x02 使用xftp测试连接</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-添加用户"><span class="nav-text">0x00 添加用户</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#添加组"><span class="nav-text">添加组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再添加账户"><span class="nav-text">再添加账户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询用户是否添加到组"><span class="nav-text">查询用户是否添加到组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置密码"><span class="nav-text">设置密码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-修改sshd-config配置文件"><span class="nav-text">0x01 修改sshd_config配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编辑配置文件：-etc-ssh-sshd-config"><span class="nav-text">编辑配置文件：/etc/ssh/sshd_config</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改锁定用户目录的权限"><span class="nav-text">修改锁定用户目录的权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加可上传删除目录"><span class="nav-text">添加可上传删除目录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-使用xftp测试连接"><span class="nav-text">0x02 使用xftp测试连接</span></a></li></ol></div>
             
 
           </div>
@@ -858,7 +859,7 @@
         var disqus_config = function () {
           this.page.url = 'https://kionf.com/2017/05/17/linux-sftp/';
           this.page.identifier = '2017/05/17/linux-sftp/';
-          this.page.title = 'sftp锁定用户根目录配置详解';
+          this.page.title = '禁用用户SSH登陆，SFTP锁定指定目录配置详解';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://kionf-com.disqus.com/embed.js';
