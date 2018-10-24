@@ -111,7 +111,7 @@
 <meta property="og:description" content="SFTP，即 SSH 文件传输协议，或者说是安全文件传输协议, 通过SSH端口加密传输。但是，由于这种传输方式使用了加密/解密技术，所以传输效率比普通的FTP要低得多。SFTP的优势在于SSH软件包中包含SFTP（无需额外安装），iptables无需添加额外端口，配置方便">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://kionf.com/article_images/stfp.png">
-<meta property="og:updated_time" content="2018-09-20T03:43:11.077Z">
+<meta property="og:updated_time" content="2018-10-24T07:36:43.801Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="禁用用户SSH登陆，SFTP锁定指定目录配置详解">
 <meta name="twitter:description" content="SFTP，即 SSH 文件传输协议，或者说是安全文件传输协议, 通过SSH端口加密传输。但是，由于这种传输方式使用了加密/解密技术，所以传输效率比普通的FTP要低得多。SFTP的优势在于SSH软件包中包含SFTP（无需额外安装），iptables无需添加额外端口，配置方便">
@@ -443,7 +443,7 @@
 <h2 id="添加可上传删除目录"><a href="#添加可上传删除目录" class="headerlink" title="添加可上传删除目录"></a>添加可上传删除目录</h2><figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></div><div class="code"><pre><div class="line">mkdir /data/test/upload</div><div class="line">chown user:sftp /data/test/upload</div><div class="line">#允许user用户有读写权限，群组外用户无写入权限</div><div class="line">chmod 755 /data/test/upload</div></pre></div></div></figure>
 <figure class="highlight bash"><figcaption><span class="caption">此时目录权限结构</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">drwxr-xr-x  19 root sftp      4096 9月   4 17:52 /data/<span class="built_in">test</span></div><div class="line marked"><span class="built_in">test</span>目录下，user用户可读不可写</div><div class="line"></div><div class="line">drwxr-xr-x  4  user sftp      4096 9月  28 12:02 /data/<span class="built_in">test</span>/upload</div><div class="line marked">upload目录下，user用户可进行读写操作</div></pre></div></div></figure>
 <figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></div><div class="code"><pre><div class="line">#重启SSHD使配置生效</div><div class="line">service sshd restart</div></pre></div></div></figure>
-<h1 id="0x02-使用xftp测试连接"><a href="#0x02-使用xftp测试连接" class="headerlink" title="0x02 使用xftp测试连接"></a>0x02 使用xftp测试连接</h1><span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_images/stfp.png" class="full-image" alt="alt" title="xstfp"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<h1 id="0x02-使用xftp测试连接"><a href="#0x02-使用xftp测试连接" class="headerlink" title="0x02 使用xftp测试连接"></a>0x02 使用xftp测试连接</h1><p><img src="https://kionf.com/article_images/stfp.png" alt="kionf"></p>
 
       
     </div>
