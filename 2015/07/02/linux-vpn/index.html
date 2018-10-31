@@ -109,7 +109,7 @@
 <meta property="og:site_name" content="Kionf">
 <meta property="og:description" content="3分钟快速搭建VPN服务器">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-24T07:36:43.805Z">
+<meta property="og:updated_time" content="2018-10-31T10:19:28.311Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux搭建vpn服务器">
 <meta name="twitter:description" content="3分钟快速搭建VPN服务器">
@@ -425,7 +425,7 @@
 <blockquote>
 <p>这两句设置了当外部计算机通过pptp联接到vpn后所能拿到的ip地址范围和服务器的ip地址设置</p>
 </blockquote>
-<h2 id="3、添加登录用户"><a href="#3、添加登录用户" class="headerlink" title="3、添加登录用户"></a>3、添加登录用户</h2><figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">vim  /etc/ppp/chap-secrets</div></pre></div></div></figure>
+<h2 id="3、添加登录用户"><a href="#3、添加登录用户" class="headerlink" title="3、添加登录用户"></a>3、添加登录用户</h2><figure class="highlight sh"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">vim  /etc/ppp/chap-secrets</div></pre></div></div></figure>
 <p><code>添加一行，内容如下</code></p>
 <figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></div><div class="code"><pre><div class="line"><span class="comment">#client		server		secret			IP addresses</span></div><div class="line"><span class="comment">#用户名		pptpd		密码				允许连接IP</span></div><div class="line"><span class="built_in">test</span>		pptpd		<span class="string">"test"</span>			*</div></pre></div></div></figure>
 <blockquote>

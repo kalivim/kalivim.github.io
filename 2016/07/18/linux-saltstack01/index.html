@@ -110,7 +110,7 @@
 <meta property="og:site_name" content="Kionf">
 <meta property="og:description" content="slatstack入门安装">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-24T07:36:43.797Z">
+<meta property="og:updated_time" content="2018-10-31T10:19:28.303Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux 自动化运维之SlatStack安装">
 <meta name="twitter:description" content="slatstack入门安装">
@@ -457,12 +457,12 @@
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
 <li>CentOS6/Redhat6</li>
 </ul>
-<figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">sudo yum install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el6.noarch.rpm</div></pre></div></div></figure>
-<figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">yum clean all</div></pre></div></div></figure>
+<figure class="highlight sh"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">sudo yum install https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el6.noarch.rpm</div></pre></div></div></figure>
+<figure class="highlight sh"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">yum clean all</div></pre></div></div></figure>
 <ul>
 <li>安装salt-minion, salt-master, 或者其它组件</li>
 </ul>
-<figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></div><div class="code"><pre><div class="line">sudo yum install salt-master			<span class="comment">#server端</span></div><div class="line">sudo yum install salt-minion			<span class="comment">#client端</span></div><div class="line">sudo yum install salt-ssh</div><div class="line">sudo yum install salt-syndic</div><div class="line">sudo yum install salt-cloud</div><div class="line">sudo yum install salt-api</div></pre></div></div></figure>
+<figure class="highlight sh"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></div><div class="code"><pre><div class="line">sudo yum install salt-master			<span class="comment">#server端</span></div><div class="line">sudo yum install salt-minion			<span class="comment">#client端</span></div><div class="line">sudo yum install salt-ssh</div><div class="line">sudo yum install salt-syndic</div><div class="line">sudo yum install salt-cloud</div><div class="line">sudo yum install salt-api</div></pre></div></div></figure>
 <p><strong>服务端</strong></p>
 <figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">sudo yum install salt-master</div></pre></div></div></figure>
 <p><strong>客户端</strong></p>

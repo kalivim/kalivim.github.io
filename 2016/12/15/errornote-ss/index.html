@@ -109,7 +109,7 @@
 <meta property="og:site_name" content="Kionf">
 <meta property="og:description" content="解决openssl升级到1.1.0以上版本，导致shadowsocks2.8.2启动报undefined symbol: EVP_CIPHER_CTX_cleanup错误。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-24T07:36:43.781Z">
+<meta property="og:updated_time" content="2018-10-31T10:19:28.291Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ShadowSocks启动报错undefined symbol EVP_CIPHER_CTX_cleanup">
 <meta name="twitter:description" content="解决openssl升级到1.1.0以上版本，导致shadowsocks2.8.2启动报undefined symbol: EVP_CIPHER_CTX_cleanup错误。">
@@ -413,7 +413,7 @@
         <blockquote class="blockquote-center"><p>解决openssl升级到1.1.0以上版本，导致shadowsocks2.8.2启动报undefined symbol: EVP_CIPHER_CTX_cleanup错误。</p>
 </blockquote>
 <a id="more"></a>
-<h2 id="准备翻墙冲浪的时候Shadowsocks报错如下："><a href="#准备翻墙冲浪的时候Shadowsocks报错如下：" class="headerlink" title="准备翻墙冲浪的时候Shadowsocks报错如下："></a>准备翻墙冲浪的时候Shadowsocks报错如下：</h2><figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></div><div class="code"><pre><div class="line">AttributeError: /usr/<span class="built_in">local</span>/ssl/lib/libcrypto.so.1.1: undefined symbol: EVP_CIPHER_CTX_cleanup</div><div class="line">shadowsocks start failed</div></pre></div></div></figure>
+<h2 id="准备翻墙冲浪的时候Shadowsocks报错如下："><a href="#准备翻墙冲浪的时候Shadowsocks报错如下：" class="headerlink" title="准备翻墙冲浪的时候Shadowsocks报错如下："></a>准备翻墙冲浪的时候Shadowsocks报错如下：</h2><figure class="highlight sh"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></div><div class="code"><pre><div class="line">AttributeError: /usr/<span class="built_in">local</span>/ssl/lib/libcrypto.so.1.1: undefined symbol: EVP_CIPHER_CTX_cleanup</div><div class="line">shadowsocks start failed</div></pre></div></div></figure>
 <h2 id="解决方法-："><a href="#解决方法-：" class="headerlink" title="解决方法 ："></a>解决方法 ：</h2><h3 id="1-vim打开文件openssl-py"><a href="#1-vim打开文件openssl-py" class="headerlink" title="1. vim打开文件openssl.py"></a>1. vim打开文件openssl.py</h3><p><code>vim /usr/local/lib/python3.5/dist-packages/shadowsocks/crypto/openssl.py</code></p>
 <blockquote>
 <p>路径不同根据报错路径而定</p>

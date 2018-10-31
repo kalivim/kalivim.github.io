@@ -112,7 +112,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://kionf.com/article_images/network.png">
 <meta property="og:image" content="https://kionf.com/article_images/network2.png">
-<meta property="og:updated_time" content="2018-10-24T07:36:43.801Z">
+<meta property="og:updated_time" content="2018-10-31T10:19:28.303Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SSH端口转发">
 <meta name="twitter:description" content="通过本文的介绍，读者可以从中了解到如何应用 SSH 端口转发机制来解决日常工作 / 生活中的一些问题。学会在非安全环境下使用端口转发来加密网络应用，保护个人隐私以及重要商业信息。同时也能够用此技术解决工作中一些常见问题，例如解决防火墙及网络应用本身带来的一些限制。">
@@ -442,7 +442,7 @@
 <p>这里做的是在A主机本地的端口转发，如果想把B机器80端口转发到在C机器的80端口</p>
 </blockquote>
 <p>在C机器执行：</p>
-<figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></div><div class="code"><pre><div class="line"><span class="comment">#ssh -CfNgL 0.0.0.0:80:172.16.1.2:80 root@172.16.1.3</span></div><div class="line">ssh -CfNgL 0.0.0.0:80:172.16.1.2:80 root@123.56.1.23</div><div class="line">									只需要把此ip，更换成A机器外网ip即可</div><div class="line"><span class="comment">#ssh登陆A主机，告诉A主机，转发B主机（172.16.1.2）80端口，本机SSH与A主机建立SSH隧道转发到本机80端口</span></div><div class="line"><span class="comment">#此时在A主机执行netstat -anp|grep ssh会多出来一条SSH隧道进程，这个隧道就是与C主机建立的</span></div></pre></div></div></figure>
+<figure class="highlight sh"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></div><div class="code"><pre><div class="line"><span class="comment">#ssh -CfNgL 0.0.0.0:80:172.16.1.2:80 root@172.16.1.3</span></div><div class="line">ssh -CfNgL 0.0.0.0:80:172.16.1.2:80 root@123.56.1.23</div><div class="line">									只需要把此ip，更换成A机器外网ip即可</div><div class="line"><span class="comment">#ssh登陆A主机，告诉A主机，转发B主机（172.16.1.2）80端口，本机SSH与A主机建立SSH隧道转发到本机80端口</span></div><div class="line"><span class="comment">#此时在A主机执行netstat -anp|grep ssh会多出来一条SSH隧道进程，这个隧道就是与C主机建立的</span></div></pre></div></div></figure>
 <p>访问流程如下：</p>
 <figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">Client(C)    TCP&gt;    C:80    通过SSH隧道&gt;    SSH(A)    TCP&gt;    B:80</div></pre></div></div></figure>
 <div class="note danger"><p>建议亲手操作去试试找下感觉！</p>
@@ -450,7 +450,7 @@
 <h2 id="0x03-远程转发"><a href="#0x03-远程转发" class="headerlink" title="0x03 远程转发"></a>0x03 远程转发</h2><p><img src="https://kionf.com/article_images/network2.png" alt="远程转发"></p>
 <p>如图，同样我们对C机器没有操作权限，D机器想访问C机器80端口，但是和C同一网段的机器都没有外网ip，只有A机器有外网但和C又不是一个局域网，上节我们用的本地端口转发在这里就不能使用了，此时远程端口转发出来了: )</p>
 <p>在B机器执行：</p>
-<figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></div><div class="code"><pre><div class="line">		需要转发主机的ip(C)</div><div class="line">	        	|</div><div class="line">ssh -CNfgR 0.0.0.0:80:172.16.1.2:80 root@123.56.2.3</div><div class="line">	    |      |              |            |</div><div class="line">远程主机监听网段 远程主机监听端口   转发端口     远程主机(A)</div></pre></div></div></figure>
+<figure class="highlight sh"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></div><div class="code"><pre><div class="line">		需要转发主机的ip(C)</div><div class="line">	        	|</div><div class="line">ssh -CNfgR 0.0.0.0:80:172.16.1.2:80 root@123.56.2.3</div><div class="line">	    |      |              |            |</div><div class="line">远程主机监听网段 远程主机监听端口   转发端口     远程主机(A)</div></pre></div></div></figure>
 <p>执行如上操作，此时D访问A主机80端口就可以转发到C主机80端口<code>B主机扮演跳板机角色</code></p>
 <p>访问流程如下：</p>
 <figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></div><div class="code"><pre><div class="line">Client(D)    TCP&gt;    A:80    SSH隧道&gt;    B    TCP&gt;    C:80</div><div class="line">#有种卖队友的感觉：）</div></pre></div></div></figure>
