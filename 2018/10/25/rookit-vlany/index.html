@@ -32,6 +32,10 @@
 
 
 
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
 
 
 
@@ -116,7 +120,7 @@
 <meta property="og:image" content="https://kionf.com/article_images/vlany-08.jpg">
 <meta property="og:image" content="https://kionf.com/article_images/vlany-09.jpg">
 <meta property="og:image" content="https://kionf.com/article_images/vlany-10.jpg">
-<meta property="og:updated_time" content="2018-10-31T09:52:34.614Z">
+<meta property="og:updated_time" content="2018-10-31T10:04:15.726Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux动态链接库预加载型后门，Vlany安装及分析">
 <meta name="twitter:description" content="此工具vlany通过LD_PRELOAD环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。类似于在/etc/profile 中添加alias别名’重写命令的感觉">
@@ -130,7 +134,7 @@
     root: '/',
     scheme: 'Muse',
     sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
-    fancybox: false,
+    fancybox: true,
     motion: true,
     duoshuo: {
       userId: '0',
@@ -481,6 +485,10 @@
 </div>
 <h2 id="2-accept-后门连接"><a href="#2-accept-后门连接" class="headerlink" title="2. accept()后门连接"></a>2. accept()后门连接</h2><figure class="highlight bash"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></div><div class="code"><pre><div class="line"><span class="comment">#accept backdoor low port: 271</span></div><div class="line"><span class="comment">#accept backdoor high port: 274</span></div><div class="line"><span class="comment"># -p 指定 271-274 范围内端口</span></div><div class="line">nc 192.168.10.35 22 -p 271</div><div class="line"><span class="comment">#输入设定的accept密码后回车</span></div><div class="line">***REMOVED***</div><div class="line"> [+] shell dropped</div></pre></div></div></figure>
 <p><strong>accept()后门在实际测试中没有成功，由于内核版本等问题。</strong></p>
+<h1 id="0x04-检测"><a href="#0x04-检测" class="headerlink" title="0x04 检测"></a>0x04 检测</h1><figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">git clone https://github.com/mempodippy/detect_preload.git &amp;&amp; cd detect_preload &amp;&amp; ./detect_preload</div></pre></div></div></figure>
+<p>执行以上小程序查看输出</p>
+<figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></div><div class="code"><pre><div class="line">[+] finished basic checks</div><div class="line"></div><div class="line">0x7f0144ca2000 /lib64/libdl.so.2</div><div class="line">0x7f014490a000 /lib64/libc.so.6</div><div class="line">0x7f01446ca000 /lib64/libcrypt.so.1</div><div class="line marked">(nil) /lib64/ld-linux-x86-64.so.2</div><div class="line">0x7f01444c2000 /lib64/libfreebl3.so</div></pre></div></div></figure>
+<p>此程序获取动态连接库信息，<code>ld-linux-x86-64.so.2</code> 无法获取，存在后门。此rookit清理只能替换被修改的恶意动态链接库</p>
 <blockquote>
 <p>参考：<br>  <a href="https://raw.githubusercontent.com/mempodippy/vlany/master/README_old" target="_blank" rel="noopener">vlany_readme_file</a><br>  <a href="http://haxelion.eu/article/LD_NOT_PRELOADED_FOR_REAL/" target="_blank" rel="noopener">系统函数</a><br>  <a href="https://github.com/mempodippy/vlany/wiki/Features" target="_blank" rel="noopener">vlany_wiki</a></p>
 </blockquote>
@@ -719,7 +727,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-工具原理分析"><span class="nav-text">0x00 工具原理分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-下载项目"><span class="nav-text">0x01 下载项目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-编译安装"><span class="nav-text">0x02 编译安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-配置PAM后门"><span class="nav-text">1. 配置PAM后门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-配置accept-后门"><span class="nav-text">2. 配置accept()后门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-连接信息"><span class="nav-text">3. 连接信息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-连接后门"><span class="nav-text">0x03 连接后门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-PAM后门连接"><span class="nav-text">1. PAM后门连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-accept-后门连接"><span class="nav-text">2. accept()后门连接</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-工具原理分析"><span class="nav-text">0x00 工具原理分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-下载项目"><span class="nav-text">0x01 下载项目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-编译安装"><span class="nav-text">0x02 编译安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-配置PAM后门"><span class="nav-text">1. 配置PAM后门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-配置accept-后门"><span class="nav-text">2. 配置accept()后门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-连接信息"><span class="nav-text">3. 连接信息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-连接后门"><span class="nav-text">0x03 连接后门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-PAM后门连接"><span class="nav-text">1. PAM后门连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-accept-后门连接"><span class="nav-text">2. accept()后门连接</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04-检测"><span class="nav-text">0x04 检测</span></a></li></ol></div>
             
 
           </div>
@@ -812,6 +820,8 @@
 
 
 
+  
+
 
 
 
@@ -837,6 +847,9 @@
 
   
   <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
 
 
   
