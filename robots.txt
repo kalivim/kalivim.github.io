@@ -10,6 +10,7 @@ Disallow: /css/
 Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
+Disallow: /404.html
 
 Sitemap: https://kionf.com/sitemap.xml
 Sitemap: https://kionf.com/baidusitemap.xml
