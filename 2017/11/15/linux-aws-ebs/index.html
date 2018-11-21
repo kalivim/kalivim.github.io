@@ -110,16 +110,16 @@
 <meta property="og:site_name" content="Kionf">
 <meta property="og:description" content="5min不停机扩容EBS卷大小">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://kionf.com/article_images/aws-ebs-1.png">
-<meta property="og:image" content="https://kionf.com/article_images/aws-ebs-2.png">
-<meta property="og:image" content="https://kionf.com/article_images/aws-ebs-3.png">
-<meta property="og:image" content="https://kionf.com/article_images/aws-ebs-4.png">
-<meta property="og:image" content="https://kionf.com/article_images/aws-ebs-5.png">
-<meta property="og:updated_time" content="2018-10-31T10:19:28.299Z">
+<meta property="og:image" content="https://kionf.com/article_images/aws-ebs/aws-ebs-1.png">
+<meta property="og:image" content="https://kionf.com/article_images/aws-ebs/aws-ebs-2.png">
+<meta property="og:image" content="https://kionf.com/article_images/aws-ebs/aws-ebs-3.png">
+<meta property="og:image" content="https://kionf.com/article_images/aws-ebs/aws-ebs-4.png">
+<meta property="og:image" content="https://kionf.com/article_images/aws-ebs/aws-ebs-5.png">
+<meta property="og:updated_time" content="2018-11-21T08:59:26.333Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AWS EC2 磁盘EBS扩容">
 <meta name="twitter:description" content="5min不停机扩容EBS卷大小">
-<meta name="twitter:image" content="https://kionf.com/article_images/aws-ebs-1.png">
+<meta name="twitter:image" content="https://kionf.com/article_images/aws-ebs/aws-ebs-1.png">
 
 
 
@@ -431,12 +431,12 @@
         <blockquote class="blockquote-center"><p>5min不停机扩容EBS卷大小</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="0x00-增加磁盘大小"><a href="#0x00-增加磁盘大小" class="headerlink" title="0x00 增加磁盘大小"></a>0x00 增加磁盘大小</h1><h2 id="1-在ec2实例界面选择相应需要扩容磁盘的实例，选择要扩容的磁盘"><a href="#1-在ec2实例界面选择相应需要扩容磁盘的实例，选择要扩容的磁盘" class="headerlink" title="1. 在ec2实例界面选择相应需要扩容磁盘的实例，选择要扩容的磁盘"></a>1. 在ec2实例界面选择相应需要扩容磁盘的实例，选择要扩容的磁盘</h2><p><img src="https://kionf.com/article_images/aws-ebs-1.png" alt="kionf"></p>
-<p><img src="https://kionf.com/article_images/aws-ebs-2.png" alt="kionf"></p>
-<h2 id="2-修改卷大小"><a href="#2-修改卷大小" class="headerlink" title="2. 修改卷大小"></a>2. 修改卷大小</h2><p><img src="https://kionf.com/article_images/aws-ebs-3.png" alt="kionf">    </p>
-<p><img src="https://kionf.com/article_images/aws-ebs-4.png" alt="kionf">    </p>
+<h1 id="0x00-增加磁盘大小"><a href="#0x00-增加磁盘大小" class="headerlink" title="0x00 增加磁盘大小"></a>0x00 增加磁盘大小</h1><h2 id="1-在ec2实例界面选择相应需要扩容磁盘的实例，选择要扩容的磁盘"><a href="#1-在ec2实例界面选择相应需要扩容磁盘的实例，选择要扩容的磁盘" class="headerlink" title="1. 在ec2实例界面选择相应需要扩容磁盘的实例，选择要扩容的磁盘"></a>1. 在ec2实例界面选择相应需要扩容磁盘的实例，选择要扩容的磁盘</h2><p><img src="https://kionf.com/article_images/aws-ebs/aws-ebs-1.png" alt="kionf"></p>
+<p><img src="https://kionf.com/article_images/aws-ebs/aws-ebs-2.png" alt="kionf"></p>
+<h2 id="2-修改卷大小"><a href="#2-修改卷大小" class="headerlink" title="2. 修改卷大小"></a>2. 修改卷大小</h2><p><img src="https://kionf.com/article_images/aws-ebs/aws-ebs-3.png" alt="kionf">    </p>
+<p><img src="https://kionf.com/article_images/aws-ebs/aws-ebs-4.png" alt="kionf">    </p>
 <h2 id="3-确认"><a href="#3-确认" class="headerlink" title="3. 确认"></a>3. 确认</h2><p>显示进度，等待应用配置完成，需要几分钟耐心等待….</p>
-<p><img src="https://kionf.com/article_images/aws-ebs-5.png" alt="kionf">    </p>
+<p><img src="https://kionf.com/article_images/aws-ebs/aws-ebs-5.png" alt="kionf">    </p>
 <h1 id="0x01-扩容磁盘"><a href="#0x01-扩容磁盘" class="headerlink" title="0x01 扩容磁盘"></a>0x01 扩容磁盘</h1><p><strong>安装扩容工具</strong></p>
 <figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">yum install cloud-init cloud-utils-growpart gdisk</div></pre></div></div></figure>
 <p>等待ebs卷大小调整完成后，在扩容的实例中执行lsblk列出连接到实例的EBS设备</p>
@@ -451,6 +451,7 @@
 <figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></div><div class="code"><pre><div class="line">[root@ttt] #: resize2fs /dev/xvda1</div><div class="line">resize2fs 1.42.12 (29-Aug-2014)</div><div class="line">Filesystem at /dev/xvda1 is mounted on /; on-line resizing required</div><div class="line">old_desc_blocks = 2, new_desc_blocks = 4</div><div class="line">The filesystem on /dev/xvda1 is now 13106683 (4k) blocks long.</div></pre></div></div></figure>
 <h1 id="0x02-完成扩容"><a href="#0x02-完成扩容" class="headerlink" title="0x02 完成扩容"></a>0x02 完成扩容</h1><p>至此，磁盘已完成扩容，查看磁盘可用空间：</p>
 <figure class="highlight sh"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></div><div class="code"><pre><div class="line">[root@ttt] <span class="comment">#: df -h</span></div><div class="line">文件系统                       容量  已用  可用 已用% 挂载点</div><div class="line">devtmpfs                       3.9G   64K  3.9G    1% /dev</div><div class="line">tmpfs                          3.9G     0  3.9G    0% /dev/shm</div><div class="line">/dev/xvda1                      6000G   12G  5988.2G   0.002% /</div></pre></div></div></figure>
+
       
     </div>
 

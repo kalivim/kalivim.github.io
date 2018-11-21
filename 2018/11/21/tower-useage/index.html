@@ -110,20 +110,20 @@
 <meta property="og:site_name" content="Kionf">
 <meta property="og:description" content="ansible tower 3.3.1 实战使用，此文档为进阶使用不是网上烂大街的安装部署，如需安装配置介绍移步ansible-tower安装及破解前几年就了解过tower那时使用感觉他的点子骚，但使用不是特别方便。经过3.0大改版后，用着很舒坦！！">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-001.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-002.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-003.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-004.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-005.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-006.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-007.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-008.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-009.jpg">
-<meta property="og:updated_time" content="2018-11-21T08:46:59.767Z">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower/ansible-tower-001.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower/ansible-tower-002.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower/ansible-tower-003.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower/ansible-tower-004.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower/ansible-tower-005.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower/ansible-tower-006.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower/ansible-tower-007.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower/ansible-tower-008.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower/ansible-tower-009.jpg">
+<meta property="og:updated_time" content="2018-11-21T08:54:10.091Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ansible tower 实战使用详解">
 <meta name="twitter:description" content="ansible tower 3.3.1 实战使用，此文档为进阶使用不是网上烂大街的安装部署，如需安装配置介绍移步ansible-tower安装及破解前几年就了解过tower那时使用感觉他的点子骚，但使用不是特别方便。经过3.0大改版后，用着很舒坦！！">
-<meta name="twitter:image" content="https://kionf.com/article_images/ansible-tower-001.jpg">
+<meta name="twitter:image" content="https://kionf.com/article_images/ansible-tower/ansible-tower-001.jpg">
 
 
 
@@ -432,7 +432,7 @@
       
 
       
-        <p><img src="https://kionf.com/article_images/ansible-tower-001.jpg" alt="kionf"></p>
+        <p><img src="https://kionf.com/article_images/ansible-tower/ansible-tower-001.jpg" alt="kionf"></p>
 <blockquote class="blockquote-center"><p>ansible tower 3.3.1 实战使用，此文档为进阶使用不是网上烂大街的安装部署，如需安装配置介绍移步<a href="https://kionf.com/2017/07/24/linux-tower">ansible-tower安装及破解</a>前几年就了解过tower那时使用感觉他的点子骚，但使用不是特别方便。经过3.0大改版后，用着很舒坦！！</p>
 </blockquote>
 <a id="more"></a>
@@ -443,9 +443,9 @@
 <p>初始流程：从<code>Inventories</code>添加主机 &gt; <code>Credentials</code>添加连接机器密码/添加git账号（用来Projects从Git拉取Playbook） &gt; <code>Projects</code>配置playbook获取方式 &gt; <code>Templates</code>指定那些机器跑Playbook，和运行时的参数</p>
 <h1 id="0x00-如何批量导入资产"><a href="#0x00-如何批量导入资产" class="headerlink" title="0x00 如何批量导入资产"></a>0x00 如何批量导入资产</h1><p>新版本的ansible-tower非常强大，笔者相信他一定能站起来。关于资产的导入<code>ansible tower</code>内部支持从云厂商或者私有虚拟化云直接导入机器，如果你使用的云厂商不支持，还可自己编写python/shell脚本来调用云厂商API添加到<code>ansible tower</code>资产中。抓紧 Let’s Go</p>
 <h2 id="0x01-通过UI界面导入"><a href="#0x01-通过UI界面导入" class="headerlink" title="0x01 通过UI界面导入"></a>0x01 通过UI界面导入</h2><p>点击<code>Inventories</code>点击添加按钮，会提示出两种<code>Inventory</code>：<code>Inventory 正常的资产</code>， <code>Smart Inventory 根据从Inventory筛选条件变化的</code></p>
-<h3 id="1）添加Inventory"><a href="#1）添加Inventory" class="headerlink" title="1）添加Inventory"></a>1）添加Inventory</h3><p><img src="https://kionf.com/article_images/ansible-tower-002.jpg" alt="Inventory"></p>
+<h3 id="1）添加Inventory"><a href="#1）添加Inventory" class="headerlink" title="1）添加Inventory"></a>1）添加Inventory</h3><p><img src="https://kionf.com/article_images/ansible-tower/ansible-tower-002.jpg" alt="Inventory"></p>
 <p>保存后在点击<code>HOSTS</code>添加主机</p>
-<h3 id="2）添加Smart-Inventory"><a href="#2）添加Smart-Inventory" class="headerlink" title="2）添加Smart Inventory"></a>2）添加Smart Inventory</h3><p><img src="https://kionf.com/article_images/ansible-tower-003.jpg" alt="smart Inventory"></p>
+<h3 id="2）添加Smart-Inventory"><a href="#2）添加Smart-Inventory" class="headerlink" title="2）添加Smart Inventory"></a>2）添加Smart Inventory</h3><p><img src="https://kionf.com/article_images/ansible-tower/ansible-tower-003.jpg" alt="smart Inventory"></p>
 <p>Smart Inventory 是通过筛选IP/主机名称/id范围 来定义的主机清单</p>
 <h2 id="0x02-通过命令行tower-manage批量添加主机"><a href="#0x02-通过命令行tower-manage批量添加主机" class="headerlink" title="0x02 通过命令行tower-manage批量添加主机"></a>0x02 通过命令行<code>tower-manage</code>批量添加主机</h2><p>通过Tower自带的命令行工具<code>tower-manage</code>来批量导入主机，可以从主机的<code>/etc/ansible/hosts</code>中直接导入</p>
 <figure class="highlight yaml"><figcaption><span class="caption">示例文件</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></div><div class="code"><pre><div class="line"><span class="string">[test:children]</span></div><div class="line"><span class="string">test-signal</span></div><div class="line"><span class="string">test-mysql</span></div><div class="line"><span class="string">test-rtc</span></div><div class="line"><span class="string">test-tomcat</span></div><div class="line"></div><div class="line"><span class="string">[test-rtc]</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.193</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.189</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.187</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"></div><div class="line"><span class="string">[test-mysql]</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.186</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.185</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"></div><div class="line"><span class="string">[test-signal]</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.190</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.191</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.197</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.198</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"></div><div class="line"><span class="string">[test-tomcat]</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.184</span> <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.188</span> <span class="string">ansible_ssh_user=root</span></div><div class="line"></div><div class="line"><span class="string">[test-nginx]</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.191</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.190</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div></pre></div></div></figure>
@@ -453,35 +453,35 @@
 <p><strong>选项介绍：</strong></p>
 <figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></div><div class="code"><pre><div class="line">--source            指定inventory文件</div><div class="line">--group-filter      从文件中通过组名过滤</div><div class="line">--host-filter       通过host name过滤</div><div class="line">--inventory-name    导入到指定名称资产清单</div><div class="line">--inventory-id      导入到指定ID的资产清单</div><div class="line"><span class="meta">#</span><span class="bash"> name 和 id 选一个</span></div><div class="line"></div><div class="line">--overwrite         覆盖主机和组，默认不覆盖</div><div class="line">--overwrite-vars    覆盖主机变量</div><div class="line">--keep-vars         保持主机变量</div><div class="line"></div><div class="line">--enabled-value     导入的主机状态是否激活默认激活</div></pre></div></div></figure>
 <p><strong>导入结果</strong></p>
-<p><img src="https://kionf.com/article_images/ansible-tower-004.jpg" alt="tower-manage"></p>
+<p><img src="https://kionf.com/article_images/ansible-tower/ansible-tower-004.jpg" alt="tower-manage"></p>
 <h2 id="0x03-导入云厂商主机"><a href="#0x03-导入云厂商主机" class="headerlink" title="0x03 导入云厂商主机"></a>0x03 导入云厂商主机</h2><div class="note danger"><p>暂未使用😂</p>
 </div>
 <hr>
 
 <h1 id="0x01-创建凭证"><a href="#0x01-创建凭证" class="headerlink" title="0x01 创建凭证"></a>0x01 创建凭证</h1><p>可以创建各种各样的凭证，连接云厂商Api的凭证/连接gitlab的凭证/连接Linux主机的凭证/自定义的凭证等等。。我们先创建一个Gitlab认证用来拉取我们的Playbook</p>
-<h2 id="0x01-创建版本控制凭证"><a href="#0x01-创建版本控制凭证" class="headerlink" title="0x01 创建版本控制凭证"></a>0x01 创建版本控制凭证</h2><p><img src="https://kionf.com/article_images/ansible-tower-005.jpg" alt="tower-manage"></p>
+<h2 id="0x01-创建版本控制凭证"><a href="#0x01-创建版本控制凭证" class="headerlink" title="0x01 创建版本控制凭证"></a>0x01 创建版本控制凭证</h2><p><img src="https://kionf.com/article_images/ansible-tower/ansible-tower-005.jpg" alt="tower-manage"></p>
 <p><code>Credential Type</code>选择<code>Source Control</code> </p>
-<h2 id="0x02-创建登陆机器凭证"><a href="#0x02-创建登陆机器凭证" class="headerlink" title="0x02 创建登陆机器凭证"></a>0x02 创建登陆机器凭证</h2><p><img src="https://kionf.com/article_images/ansible-tower-006.jpg" alt="tower-manage"></p>
+<h2 id="0x02-创建登陆机器凭证"><a href="#0x02-创建登陆机器凭证" class="headerlink" title="0x02 创建登陆机器凭证"></a>0x02 创建登陆机器凭证</h2><p><img src="https://kionf.com/article_images/ansible-tower/ansible-tower-006.jpg" alt="tower-manage"></p>
 <p><code>Credential Type</code> 选择 <code>Machine</code></p>
 <hr>
 
 <h1 id="0x02-创建项目"><a href="#0x02-创建项目" class="headerlink" title="0x02 创建项目"></a>0x02 创建项目</h1><p><code>playbook</code>拉取的方式主要有：</p>
 <figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></div><div class="code"><pre><div class="line">- Manual        从本地目录读取</div><div class="line">- Git           从Git拉取</div><div class="line">- Mercurial     从mer</div><div class="line">- SVN</div><div class="line">- RedHatInsights</div></pre></div></div></figure>
 <p>这里选用Git从Gitlab上拉取</p>
-<p><img src="https://kionf.com/article_images/ansible-tower-007.jpg" alt="tower-manage"></p>
+<p><img src="https://kionf.com/article_images/ansible-tower/ansible-tower-007.jpg" alt="tower-manage"></p>
 <p>Options选项配置：</p>
 <figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></div><div class="code"><pre><div class="line">- Clean </div><div class="line">在从gitlab拉取前清除本地修改的playbook</div><div class="line">- Delete on Update </div><div class="line">当更新时删除所有本地储存playbook</div><div class="line">- Update Revision on Launch </div><div class="line">当Templates任务运行时，自动从git拉取更新</div></pre></div></div></figure>
 <p>tower 测试playbook地址：<a href="https://github.com/ansible/tower-example.git" target="_blank" rel="noopener">tower-example</a></p>
 <hr>
 
 <h1 id="0x03-创建任务模板"><a href="#0x03-创建任务模板" class="headerlink" title="0x03 创建任务模板"></a>0x03 创建任务模板</h1><p>最后一步来了,创建<code>Templates</code></p>
-<p><img src="https://kionf.com/article_images/ansible-tower-008.jpg" alt="tower-templates"></p>
+<p><img src="https://kionf.com/article_images/ansible-tower/ansible-tower-008.jpg" alt="tower-templates"></p>
 <p>Options选项配置：</p>
 <figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></div><div class="code"><pre><div class="line">- Enable Privilege Escalation </div><div class="line"><span class="meta">#</span><span class="bash"> 默认脚本以awx用户执行playbook，开启后使用管理员身份</span></div><div class="line">- Allow Provisioning Callbacks </div><div class="line"><span class="meta">#</span><span class="bash"> 运行通过url回调来启动这个任务</span></div><div class="line">- Enable Concurrent Jobs </div><div class="line"><span class="meta">#</span><span class="bash"> 允许相同任务一起运行</span></div><div class="line">- Use Fact Cache </div><div class="line"><span class="meta">#</span><span class="bash"> 使用缓存</span></div></pre></div></div></figure>
 <p> 点击<code>SCHEDULES</code>可以添加计划任务</p>
 <hr>
 
-<h1 id="0x04-完结"><a href="#0x04-完结" class="headerlink" title="0x04 完结"></a>0x04 完结</h1><p><img src="https://kionf.com/article_images/ansible-tower-009.jpg" alt="tower-templates"></p>
+<h1 id="0x04-完结"><a href="#0x04-完结" class="headerlink" title="0x04 完结"></a>0x04 完结</h1><p><img src="https://kionf.com/article_images/ansible-tower/ansible-tower-009.jpg" alt="tower-templates"></p>
 <p>我相信Tower会站起来😂，后续再补充。</p>
 <p><strong> 参考：</strong></p>
 <blockquote>

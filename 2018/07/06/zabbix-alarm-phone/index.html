@@ -110,20 +110,20 @@
 <meta property="og:site_name" content="Kionf">
 <meta property="og:description" content="Zabbix 使用 twilio 进行免费电话报警, 免除企业认证繁琐步骤">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_signup.png">
-<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_01.png">
-<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_02.png">
-<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_03.png">
-<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_04.png">
-<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_phone.png">
-<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_05.png">
-<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_06.png">
-<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_07.png">
-<meta property="og:updated_time" content="2018-10-31T10:19:28.327Z">
+<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_signup.png">
+<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_01.png">
+<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_02.png">
+<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_03.png">
+<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_04.png">
+<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_phone.png">
+<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_05.png">
+<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_06.png">
+<meta property="og:image" content="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_07.png">
+<meta property="og:updated_time" content="2018-11-21T08:58:22.586Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zabbix电话报警">
 <meta name="twitter:description" content="Zabbix 使用 twilio 进行免费电话报警, 免除企业认证繁琐步骤">
-<meta name="twitter:image" content="https://kionf.com/article_images/zabbix_alert_signup.png">
+<meta name="twitter:image" content="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_signup.png">
 
 
 
@@ -438,19 +438,19 @@
 <h1 id="0x00-注册-twilio-获取-api-调用key"><a href="#0x00-注册-twilio-获取-api-调用key" class="headerlink" title="0x00 注册 twilio 获取 api 调用key"></a>0x00 注册 twilio 获取 api 调用key</h1><h2 id="1-注册账号"><a href="#1-注册账号" class="headerlink" title="1. 注册账号"></a>1. 注册账号</h2><blockquote>
 <p>注册地址 <a href="https://www.twilio.com/try-twilio" title="Twilio-SignUp" target="_blank" rel="noopener">Twilio-SignUp</a> <strong>需要翻墙</strong></p>
 </blockquote>
-<span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_images/zabbix_alert_signup.png" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_signup.png" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
 <p><strong>密码至少14个字符，不需要特殊字符</strong></p>
 <p>通过后 选择中国区,  验证手机号</p>
-<p><img src="https://kionf.com/article_images/zabbix_alert_01.png" alt="kionf"></p>
+<p><img src="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_01.png" alt="kionf"></p>
 <p>创建项目名称(随便写)</p>
-<p><img src="https://kionf.com/article_images/zabbix_alert_02.png" alt="kionf"></p>
+<p><img src="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_02.png" alt="kionf"></p>
 <h2 id="2-获取网络号码"><a href="#2-获取网络号码" class="headerlink" title="2.  获取网络号码"></a>2.  获取网络号码</h2><blockquote>
 <p><a href="https://www.twilio.com/console/voice/build/getting-started" title="初始配置地址" target="_blank" rel="noopener">初始配置地址</a></p>
 </blockquote>
 <p>选择如下选项:</p>
-<p><img src="https://kionf.com/article_images/zabbix_alert_03.png" alt="kionf"></p>
+<p><img src="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_03.png" alt="kionf"></p>
 <p>记住这个号码结果<code>+18652052853</code>后期会使用</p>
-<p><img src="https://kionf.com/article_images/zabbix_alert_04.png" alt="kionf"></p>
+<p><img src="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_04.png" alt="kionf"></p>
 <p>到此就不用继续走剩下的几步了</p>
 <blockquote>
 <p>其他自定义<a href="https://www.twilio.com/console/phone-numbers/incoming" target="_blank" rel="noopener">电话设置</a>(默认不需要配置)</p>
@@ -470,14 +470,14 @@
 </blockquote>
 <figure class="highlight python"><figcaption><span class="fileDir">zabbix/alertscripts/</span><span class="caption">zabbix_phone</span><span class="suffix">.py</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></div><div class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="keyword">from</span> twilio.rest <span class="keyword">import</span> Client</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Your Account Sid and Auth Token from twilio.com/console</span></div><div class="line marked">account_sid = <span class="string">'your_sid'</span></div><div class="line marked">auth_token = <span class="string">'your_token'</span></div><div class="line">client = Client(account_sid, auth_token)</div><div class="line"></div><div class="line"></div><div class="line">call = client.calls.create(</div><div class="line">                        url=<span class="string">'https://demo.twilio.com/welcome/voice/'</span>,</div><div class="line">                        <span class="comment">#注册使用的手机号</span></div><div class="line marked">                        to=<span class="string">'+8611111'</span>,</div><div class="line">                        <span class="comment">#上面获取到的网络电话号码</span></div><div class="line marked">                        from_=<span class="string">'+19387770820'</span></div><div class="line">                    )</div><div class="line">print(call.sid)</div></pre></div></div></figure>
 <p>执行文件测试, 返回一段id表示成功, 接到电话</p>
-<p><img src="https://kionf.com/article_images/zabbix_alert_phone.png" alt="kionf"></p>
+<p><img src="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_phone.png" alt="kionf"></p>
 <p><br></p>
 <hr>
 
 <p><br></p>
-<h1 id="0x02-配置zabbix"><a href="#0x02-配置zabbix" class="headerlink" title="0x02 配置zabbix"></a>0x02 配置zabbix</h1><h2 id="1-添加报警媒介"><a href="#1-添加报警媒介" class="headerlink" title="1. 添加报警媒介"></a>1. 添加报警媒介</h2><span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_images/zabbix_alert_05.png" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
-<h2 id="2-连接到用户"><a href="#2-连接到用户" class="headerlink" title="2. 连接到用户"></a>2. 连接到用户</h2><span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_images/zabbix_alert_06.png" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
-<h2 id="3-添加到动作"><a href="#3-添加到动作" class="headerlink" title="3. 添加到动作"></a>3. 添加到动作</h2><span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_images/zabbix_alert_07.png" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<h1 id="0x02-配置zabbix"><a href="#0x02-配置zabbix" class="headerlink" title="0x02 配置zabbix"></a>0x02 配置zabbix</h1><h2 id="1-添加报警媒介"><a href="#1-添加报警媒介" class="headerlink" title="1. 添加报警媒介"></a>1. 添加报警媒介</h2><span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_05.png" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<h2 id="2-连接到用户"><a href="#2-连接到用户" class="headerlink" title="2. 连接到用户"></a>2. 连接到用户</h2><span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_06.png" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
+<h2 id="3-添加到动作"><a href="#3-添加到动作" class="headerlink" title="3. 添加到动作"></a>3. 添加到动作</h2><span itemprop="image" itemscope="" itemtype="http://schema.org/ImageObject"><img itemprop="url image" src="https://kionf.com/article_images/zabbix_alert_phone/zabbix_alert_07.png" class="full-image" alt="kionf"><meta itemprop="width" content="auto"><meta itemprop="height" content="auto"></span>
 <div class="note success"><p>至此<code>zabbix</code>电话报警配置完成, 如果需要免费打给多个用户, 可以注册多个账号,添加多个媒介 然后 绑定到同一个动作中. </p>
 </div>
 

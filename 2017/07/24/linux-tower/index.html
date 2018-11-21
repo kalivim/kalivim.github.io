@@ -110,15 +110,15 @@
 <meta property="og:site_name" content="Kionf">
 <meta property="og:description" content="ansibke-tower他是一个图形化的任务调度，复杂服务部署，IT自动化的一个管理平台。可以通过界面从github拉取最新playbook实施服务部署，提高生产效率。当然，它也提供一个RESET API和命令行的CLI以供python脚本调用。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://kionf.com/article_images/tower-dashboard.png">
-<meta property="og:image" content="https://kionf.com/article_images/tower-login.png">
-<meta property="og:image" content="https://kionf.com/article_images/tower-license.png">
-<meta property="og:image" content="https://kionf.com/article_images/tower-fuck.png">
-<meta property="og:updated_time" content="2018-11-21T08:45:33.061Z">
+<meta property="og:image" content="https://kionf.com/article_images/tower/tower-dashboard.png">
+<meta property="og:image" content="https://kionf.com/article_images/tower/tower-login.png">
+<meta property="og:image" content="https://kionf.com/article_images/tower/tower-license.png">
+<meta property="og:image" content="https://kionf.com/article_images/tower/tower-fuck.png">
+<meta property="og:updated_time" content="2018-11-21T09:01:22.115Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ansible-Tower部署and破解">
 <meta name="twitter:description" content="ansibke-tower他是一个图形化的任务调度，复杂服务部署，IT自动化的一个管理平台。可以通过界面从github拉取最新playbook实施服务部署，提高生产效率。当然，它也提供一个RESET API和命令行的CLI以供python脚本调用。">
-<meta name="twitter:image" content="https://kionf.com/article_images/tower-dashboard.png">
+<meta name="twitter:image" content="https://kionf.com/article_images/tower/tower-dashboard.png">
 
 
 
@@ -427,7 +427,7 @@
       
 
       
-        <p><img src="https://kionf.com/article_images/tower-dashboard.png" alt="kionf"></p>
+        <p><img src="https://kionf.com/article_images/tower/tower-dashboard.png" alt="kionf"></p>
 <blockquote class="blockquote-center"><p><code>ansibke-tower</code>他是一个图形化的任务调度，复杂服务部署，IT自动化的一个管理平台。可以通过界面从github拉取最新playbook实施服务部署，提高生产效率。当然，它也提供一个RESET API和命令行的CLI以供python脚本调用。</p>
 </blockquote>
 <a id="more"></a>
@@ -464,9 +464,9 @@
 <p>更改文件 <code>/var/lib/awx/venv/awx/lib/python2.7/site-packages/tower_license/__init__.pyc</code></p>
 <figure class="highlight python"><figcaption><span class="caption">更改低153行如下</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">153</div><div class="line">154</div><div class="line">155</div></pre></div><div class="code"><pre><div class="line"><span class="comment">#available_instances = int(attrs.get('instance_count', None) or 0)</span></div><div class="line">available_instances = <span class="number">100000</span></div><div class="line">attrs[<span class="string">'current_instances'</span>] = current_instances</div></pre></div></div></figure>
 <p>访问tower：<code>https://192.168.99.188/</code>，默认用户名为<code>admin</code>密码为<code>inventory</code>文件中设置的<code>admin_password=&#39;admin&#39;</code></p>
-<p><img src="https://kionf.com/article_images/tower-login.png" alt="kionf"></p>
+<p><img src="https://kionf.com/article_images/tower/tower-login.png" alt="kionf"></p>
 <p>重点来了，这里会提示让选择license文件，申请这个很是麻烦，so这里分享下我自己申请下来的<a href="https://kionf.com/uploads/license_4ecef0cbe6d542e48d938b8827df5590.txt" title="license文件">license文件</a>直接导入就ok。<strong>仅供实验测试使用，请勿用于其它用途！</strong>。</p>
-<p><img src="https://kionf.com/article_images/tower-license.png" alt="kionf"></p>
+<p><img src="https://kionf.com/article_images/tower/tower-license.png" alt="kionf"></p>
 <h1 id="0x03-破解10个hosts限制"><a href="#0x03-破解10个hosts限制" class="headerlink" title="0x03 破解10个hosts限制"></a>0x03 破解10个hosts限制</h1><p>申请的免费版license最多只能添加10个主机。</p>
 <figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">HOSTS AVAILABLE    10</div></pre></div></div></figure>
 <p>首先下载python反编译工具</p>
@@ -476,7 +476,7 @@
 <p>更改<code>task_engine.pyc</code>文件</p>
 <p>修改内容 <code>available_instances = int(self.attributes[&#39;instance_count&#39;])</code>为<code>available_instances = 10000</code>，大约在162行</p>
 <p>删除<code>task_engine.pyc task_engine.pyo</code>，重启tower</p>
-<p><img src="https://kionf.com/article_images/tower-fuck.png" alt="kionf"></p>
+<p><img src="https://kionf.com/article_images/tower/tower-fuck.png" alt="kionf"></p>
 <h1 id="0x04"><a href="#0x04" class="headerlink" title="0x04"></a>0x04</h1><p>至此安装破解都已完成。简单的试用了下，很方便，通过git来获取更新任务playbook文件，图形化配置playbook参数，任务审计记录。结合ansible进行主机管理，服务部署，很方便。<br>写了个zookeeper集群部署的playbook <strong><a href="https://github.com/kalivim/ansible-playbook" title="kionf" target="_blank" rel="noopener">deploy_zk</a></strong>。:P</p>
 <div class="note info"><p><a href="https://kionf.com/2017/07/24/tower-useage/">Tower进阶</a></p>
 </div>
