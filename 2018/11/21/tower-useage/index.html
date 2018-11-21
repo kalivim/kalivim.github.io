@@ -1,0 +1,1284 @@
+<!doctype html>
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Kalam:300,300italic,400,400italic,700,700italicUbuntu:300,300italic,400,400italic,700,700italicSatisfy:300,300italic,400,400italic,700,700italicInconsolata:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Ansible-Tower," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="ansible tower 3.3.1 实战使用，此文档为进阶使用不是网上烂大街的安装部署，如需安装配置介绍移步ansible-tower安装及破解前几年就了解过tower那时使用感觉他的点子骚，但使用不是特别方便。经过3.0大改版后，用着很舒坦！！">
+<meta name="keywords" content="Ansible-Tower">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ansible tower 实战使用详解">
+<meta property="og:url" content="https://kionf.com/2018/11/21/tower-useage/index.html">
+<meta property="og:site_name" content="Kionf">
+<meta property="og:description" content="ansible tower 3.3.1 实战使用，此文档为进阶使用不是网上烂大街的安装部署，如需安装配置介绍移步ansible-tower安装及破解前几年就了解过tower那时使用感觉他的点子骚，但使用不是特别方便。经过3.0大改版后，用着很舒坦！！">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-001.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-002.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-003.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-004.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-005.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-006.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-007.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/ansible-tower-008.jpg">
+<meta property="og:updated_time" content="2018-11-21T08:42:08.489Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ansible tower 实战使用详解">
+<meta name="twitter:description" content="ansible tower 3.3.1 实战使用，此文档为进阶使用不是网上烂大街的安装部署，如需安装配置介绍移步ansible-tower安装及破解前几年就了解过tower那时使用感觉他的点子骚，但使用不是特别方便。经过3.0大改版后，用着很舒坦！！">
+<meta name="twitter:image" content="https://kionf.com/article_images/ansible-tower-001.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kionf.com/2018/11/21/tower-useage/"/>
+
+
+
+
+
+  <title>ansible tower 实战使用详解 | Kionf</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-80809114-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title title motto-shake" data-text="Kionf"></span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://kionf.com/2018/11/21/tower-useage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kionf">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kionf">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ansible tower 实战使用详解</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-21T00:00:00+08:00">
+                2018-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/自动化运维/" itemprop="url" rel="index">
+                    <span itemprop="name">自动化运维</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/自动化运维/ansible-tower/" itemprop="url" rel="index">
+                    <span itemprop="name">ansible tower</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/21/tower-useage/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/11/21/tower-useage/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://kionf.com/article_images/ansible-tower-001.jpg" alt="kionf"></p>
+<blockquote class="blockquote-center"><p>ansible tower 3.3.1 实战使用，此文档为进阶使用不是网上烂大街的安装部署，如需安装配置介绍移步<a href="https://kionf.com/2017/07/24/linux-tower">ansible-tower安装及破解</a>前几年就了解过tower那时使用感觉他的点子骚，但使用不是特别方便。经过3.0大改版后，用着很舒坦！！</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="0x00-介绍"><a href="#0x00-介绍" class="headerlink" title="0x00 介绍"></a>0x00 介绍</h1><p>关于Ansible Tower 这里不多介绍，属于发布配置管理系统，支持Api及界面操作，Django编写。<strong>☝️字屌</strong></p>
+<figure class="highlight plain"><figcaption><span class="caption">实验环境</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></div><div class="code"><pre><div class="line">CentOS Linux release 7.4.1708</div><div class="line">Ansible Tower 3.3.1</div><div class="line">下载地址： https://releases.ansible.com/ansible-tower/setup/</div><div class="line">参考文档：https://docs.ansible.com/ansible-tower/latest/html/</div></pre></div></div></figure>
+<p>关于新版导航栏介绍</p>
+<figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></div><div class="code"><pre><div class="line"># viewes</div><div class="line">Dashboard           仪表盘展示信息的</div><div class="line">Jobs                跑过的任务记录</div><div class="line">Schedules           计划任务</div><div class="line">My View             查看用户的工作模版，和任务记录</div><div class="line"></div><div class="line"># resources</div><div class="line">Templates           任务模版，配置调用playbook执行时的各种参数，从此处添加计划任务</div><div class="line">Credentials         配置连接 机器/云主机api Key/自定义的凭证类型 的账号密码等信息</div><div class="line">Projects            这里配置项目对应的playbook，可以从Git上拉取或从本地文件夹读取playbook</div><div class="line">Inventories         资产清单</div><div class="line">Inventory Scripts   自定义获取资产清单的脚本</div><div class="line"></div><div class="line"># access</div><div class="line">Organizations       组织管理</div><div class="line">Users               用户管理</div><div class="line">Teams               用户组管理</div><div class="line"></div><div class="line"># Administration</div><div class="line">Credential Types    自定义凭证类型，添加后可在Credentials中使用</div><div class="line">Notifications       配置任务通知，支持电子邮件，Twillio电话等</div><div class="line">Management Jobs     计划任务管理</div><div class="line">Instance Groups     资产组管理</div><div class="line">Applications        自定义应用</div><div class="line">Settings            设置</div></pre></div></div></figure>
+<p>初始流程：从<code>Inventories</code>添加主机 &gt; <code>Credentials</code>添加连接机器密码/添加git账号（用来Projects从Git拉取Playbook） &gt; <code>Projects</code>配置playbook获取方式 &gt; <code>Templates</code>指定那些机器跑Playbook，和运行时的参数</p>
+<h1 id="0x00-如何批量导入资产"><a href="#0x00-如何批量导入资产" class="headerlink" title="0x00 如何批量导入资产"></a>0x00 如何批量导入资产</h1><p>新版本的ansible-tower非常强大，笔者相信他一定能站起来。关于资产的导入<code>ansible tower</code>内部支持从云厂商或者私有虚拟化云直接导入机器，如果你使用的云厂商不支持，还可自己编写python/shell脚本来调用云厂商API添加到<code>ansible tower</code>资产中。抓紧 Let’s Go</p>
+<h2 id="0x01-通过UI界面导入"><a href="#0x01-通过UI界面导入" class="headerlink" title="0x01 通过UI界面导入"></a>0x01 通过UI界面导入</h2><p>点击<code>Inventories</code>点击添加按钮，会提示出两种<code>Inventory</code>：<code>Inventory 正常的资产</code>， <code>Smart Inventory 根据从Inventory筛选条件变化的</code></p>
+<h3 id="1）添加Inventory"><a href="#1）添加Inventory" class="headerlink" title="1）添加Inventory"></a>1）添加Inventory</h3><p><img src="https://kionf.com/article_images/ansible-tower-002.jpg" alt="Inventory"></p>
+<p>保存后在点击<code>HOSTS</code>添加主机</p>
+<h3 id="2）添加Smart-Inventory"><a href="#2）添加Smart-Inventory" class="headerlink" title="2）添加Smart Inventory"></a>2）添加Smart Inventory</h3><p><img src="https://kionf.com/article_images/ansible-tower-003.jpg" alt="smart Inventory"></p>
+<p>Smart Inventory 是通过筛选IP/主机名称/id范围 来定义的主机清单</p>
+<h2 id="0x02-通过命令行tower-manage批量添加主机"><a href="#0x02-通过命令行tower-manage批量添加主机" class="headerlink" title="0x02 通过命令行tower-manage批量添加主机"></a>0x02 通过命令行<code>tower-manage</code>批量添加主机</h2><p>通过Tower自带的命令行工具<code>tower-manage</code>来批量导入主机，可以从主机的<code>/etc/ansible/hosts</code>中直接导入</p>
+<figure class="highlight yaml"><figcaption><span class="caption">示例文件</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></div><div class="code"><pre><div class="line"><span class="string">[test:children]</span></div><div class="line"><span class="string">test-signal</span></div><div class="line"><span class="string">test-mysql</span></div><div class="line"><span class="string">test-rtc</span></div><div class="line"><span class="string">test-tomcat</span></div><div class="line"></div><div class="line"><span class="string">[test-rtc]</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.193</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.189</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.187</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"></div><div class="line"><span class="string">[test-mysql]</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.186</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.185</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"></div><div class="line"><span class="string">[test-signal]</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.190</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.191</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.197</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.198</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"></div><div class="line"><span class="string">[test-tomcat]</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.184</span> <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.188</span> <span class="string">ansible_ssh_user=root</span></div><div class="line"></div><div class="line"><span class="string">[test-nginx]</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.191</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div><div class="line"><span class="number">172.16</span><span class="number">.8</span><span class="number">.190</span>    <span class="string">ansible_ssh_port=52330</span>  <span class="string">ansible_ssh_user=root</span></div></pre></div></div></figure>
+<figure class="highlight shell"><figcaption><span class="caption">命令导入到资产清单</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></div><div class="code"><pre><div class="line">tower-manage inventory_import --source=/etc/ansible/hosts --group-filter=test --inventory-name=测试环境 --keep-vars</div><div class="line"></div><div class="line"></div><div class="line">    1.569 INFO     Updating inventory 7: 测试环境</div><div class="line">    1.674 INFO     Reading Ansible inventory source: /etc/ansible/hosts</div><div class="line">    3.003 INFO     Processing JSON output...</div><div class="line">    3.004 INFO     Loaded 7 groups, 11 hosts</div><div class="line">    3.292 INFO     Inventory import completed for  (测试环境 - 17) in 1.7s</div></pre></div></div></figure>
+<p><strong>选项介绍：</strong></p>
+<figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></div><div class="code"><pre><div class="line">--source            指定inventory文件</div><div class="line">--group-filter      从文件中通过组名过滤</div><div class="line">--host-filter       通过host name过滤</div><div class="line">--inventory-name    导入到指定名称资产清单</div><div class="line">--inventory-id      导入到指定ID的资产清单</div><div class="line"><span class="meta">#</span><span class="bash"> name 和 id 选一个</span></div><div class="line"></div><div class="line">--overwrite         覆盖主机和组，默认不覆盖</div><div class="line">--overwrite-vars    覆盖主机变量</div><div class="line">--keep-vars         保持主机变量</div><div class="line"></div><div class="line">--enabled-value     导入的主机状态是否激活默认激活</div></pre></div></div></figure>
+<p><strong>导入结果</strong></p>
+<p><img src="https://kionf.com/article_images/ansible-tower-004.jpg" alt="tower-manage"></p>
+<h2 id="0x03-导入云厂商主机"><a href="#0x03-导入云厂商主机" class="headerlink" title="0x03 导入云厂商主机"></a>0x03 导入云厂商主机</h2><div class="note danger"><p>暂未使用😂</p>
+</div>
+<hr>
+
+<h1 id="0x01-创建凭证"><a href="#0x01-创建凭证" class="headerlink" title="0x01 创建凭证"></a>0x01 创建凭证</h1><p>可以创建各种各样的凭证，连接云厂商Api的凭证/连接gitlab的凭证/连接Linux主机的凭证/自定义的凭证等等。。我们先创建一个Gitlab认证用来拉取我们的Playbook</p>
+<h2 id="0x01-创建版本控制凭证"><a href="#0x01-创建版本控制凭证" class="headerlink" title="0x01 创建版本控制凭证"></a>0x01 创建版本控制凭证</h2><p><img src="https://kionf.com/article_images/ansible-tower-005.jpg" alt="tower-manage"></p>
+<p><code>Credential Type</code>选择<code>Source Control</code> </p>
+<h2 id="0x02-创建登陆机器凭证"><a href="#0x02-创建登陆机器凭证" class="headerlink" title="0x02 创建登陆机器凭证"></a>0x02 创建登陆机器凭证</h2><p><img src="https://kionf.com/article_images/ansible-tower-006.jpg" alt="tower-manage"></p>
+<p><code>Credential Type</code> 选择 <code>Machine</code></p>
+<hr>
+
+<h1 id="0x02-创建项目"><a href="#0x02-创建项目" class="headerlink" title="0x02 创建项目"></a>0x02 创建项目</h1><p><code>playbook</code>拉取的方式主要有：</p>
+<figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></div><div class="code"><pre><div class="line">- Manual        从本地目录读取</div><div class="line">- Git           从Git拉取</div><div class="line">- Mercurial     从mer</div><div class="line">- SVN</div><div class="line">- RedHatInsights</div></pre></div></div></figure>
+<p>这里选用Git从Gitlab上拉取</p>
+<p><img src="https://kionf.com/article_images/ansible-tower-007.jpg" alt="tower-manage"></p>
+<p>Options选项配置：</p>
+<figure class="highlight plain"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></div><div class="code"><pre><div class="line">- Clean </div><div class="line">在从gitlab拉取前清除本地修改的playbook</div><div class="line">- Delete on Update </div><div class="line">当更新时删除所有本地储存playbook</div><div class="line">- Update Revision on Launch </div><div class="line">当Templates任务运行时，自动从git拉取更新</div></pre></div></div></figure>
+<p>tower 测试playbook地址：<a href="https://github.com/ansible/tower-example.git" target="_blank" rel="noopener">tower-example</a></p>
+<hr>
+
+<h1 id="0x03-创建任务模板"><a href="#0x03-创建任务模板" class="headerlink" title="0x03 创建任务模板"></a>0x03 创建任务模板</h1><p>最后一步来了,创建<code>Templates</code></p>
+<p><img src="https://kionf.com/article_images/ansible-tower-008.jpg" alt="tower-templates"></p>
+<p>Options选项配置：</p>
+<figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></div><div class="code"><pre><div class="line">- Enable Privilege Escalation </div><div class="line"><span class="meta">#</span><span class="bash"> 默认脚本以awx用户执行playbook，开启后使用管理员身份</span></div><div class="line">- Allow Provisioning Callbacks </div><div class="line"><span class="meta">#</span><span class="bash"> 运行通过url回调来启动这个任务</span></div><div class="line">- Enable Concurrent Jobs </div><div class="line"><span class="meta">#</span><span class="bash"> 允许相同任务一起运行</span></div><div class="line">- Use Fact Cache </div><div class="line"><span class="meta">#</span><span class="bash"> 使用缓存</span></div></pre></div></div></figure>
+<p> 点击<code>SCHEDULES</code>可以添加计划任务</p>
+<hr>
+
+<h1 id="0x04-完结"><a href="#0x04-完结" class="headerlink" title="0x04 完结"></a>0x04 完结</h1><p>我相信Tower会站起来😂，后续再补充。</p>
+<p><strong> 参考：</strong></p>
+<blockquote>
+<p><a href="https://docs.ansible.com/ansible-tower/latest/html/" target="_blank" rel="noopener">https://docs.ansible.com/ansible-tower/latest/html/</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      Kionf
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://kionf.com/2018/11/21/tower-useage/" title="ansible tower 实战使用详解">https://kionf.com/2018/11/21/tower-useage/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Ansible-Tower/" rel="tag"># Ansible-Tower</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/25/rookit-vlany/" rel="next" title="Linux动态链接库预加载型后门，Vlany安装及分析">
+                <i class="fa fa-chevron-left"></i> Linux动态链接库预加载型后门，Vlany安装及分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kionf" />
+          <p class="site-author-name" itemprop="name">Kionf</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kalivim" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.freebuf.com/" title="FREEBUF" target="_blank">FREEBUF</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://paper.seebug.org/" title="SecPaper" target="_blank">SecPaper</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://kionf.com/edit/" title="MarkDown" target="_blank">MarkDown</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-介绍"><span class="nav-text">0x00 介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-如何批量导入资产"><span class="nav-text">0x00 如何批量导入资产</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-通过UI界面导入"><span class="nav-text">0x01 通过UI界面导入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）添加Inventory"><span class="nav-text">1）添加Inventory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）添加Smart-Inventory"><span class="nav-text">2）添加Smart Inventory</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-通过命令行tower-manage批量添加主机"><span class="nav-text">0x02 通过命令行tower-manage批量添加主机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-导入云厂商主机"><span class="nav-text">0x03 导入云厂商主机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-创建凭证"><span class="nav-text">0x01 创建凭证</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-创建版本控制凭证"><span class="nav-text">0x01 创建版本控制凭证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-创建登陆机器凭证"><span class="nav-text">0x02 创建登陆机器凭证</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-创建项目"><span class="nav-text">0x02 创建项目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-创建任务模板"><span class="nav-text">0x03 创建任务模板</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04-完结"><span class="nav-text">0x04 完结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="heart">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kionf</span>
+</div>
+
+
+<div class="powered-by">
+  什么样的人才能和时间成为朋友？
+</div>
+
+<div class="theme-info">
+  止于 -
+    源
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/motto.js"></script>
+
+<script type="text/javascript">
+  new Motto('.title', {
+    lyric: document.querySelector('.title').attributes['data-text'].value,
+    flashSpeed: 200,
+    flashTimeout: 1000
+  });
+</script>
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://kionf-com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://kionf.com/2018/11/21/tower-useage/';
+          this.page.identifier = '2018/11/21/tower-useage/';
+          this.page.title = 'ansible tower 实战使用详解';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://kionf-com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (search_path.endsWith("json")) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  <script type="text/javascript" src="/js/src/function.js"></script>
+<script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+<script >
+	$(document).ready(
+	function()
+		{			
+			
+		}
+	);	
+</script>
+
+
+
+</body>
+</html>
