@@ -1,0 +1,1248 @@
+<!doctype html>
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Kalam:300,300italic,400,400italic,700,700italicUbuntu:300,300italic,400,400italic,700,700italicSatisfy:300,300italic,400,400italic,700,700italicInconsolata:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Mysql,Python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="python分析Mysql慢查询。通过Python调用开源分析工具pt-query-digest生成json结果，Python脚本解析json生成html报告。">
+<meta name="keywords" content="Mysql,Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python 分析慢查询日志生成报告">
+<meta property="og:url" content="https://kionf.com/2018/11/22/mysql-slowlog-report/index.html">
+<meta property="og:site_name" content="Kionf">
+<meta property="og:description" content="python分析Mysql慢查询。通过Python调用开源分析工具pt-query-digest生成json结果，Python脚本解析json生成html报告。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://kionf.com/article_images/slowlog-report.jpg">
+<meta property="og:image" content="https://kionf.com/article_images/slowlog-report-02.jpg">
+<meta property="og:updated_time" content="2018-11-22T06:43:36.157Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python 分析慢查询日志生成报告">
+<meta name="twitter:description" content="python分析Mysql慢查询。通过Python调用开源分析工具pt-query-digest生成json结果，Python脚本解析json生成html报告。">
+<meta name="twitter:image" content="https://kionf.com/article_images/slowlog-report.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kionf.com/2018/11/22/mysql-slowlog-report/"/>
+
+
+
+
+
+  <title>python 分析慢查询日志生成报告 | Kionf</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-80809114-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title title motto-shake" data-text="Kionf"></span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://kionf.com/2018/11/22/mysql-slowlog-report/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kionf">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kionf">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">python 分析慢查询日志生成报告</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-22T00:00:00+08:00">
+                2018-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/22/mysql-slowlog-report/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/11/22/mysql-slowlog-report/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://kionf.com/article_images/slowlog-report.jpg" alt="Mysql慢查询报告"></p>
+<blockquote class="blockquote-center"><p>python分析Mysql慢查询。通过Python调用开源分析工具<code>pt-query-digest</code>生成json结果，Python脚本解析json生成html报告。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="0x00-直接上代码"><a href="#0x00-直接上代码" class="headerlink" title="0x00 直接上代码"></a>0x00 直接上代码</h1><figure class="highlight python"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div></pre></div><div class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="comment"># @Time    : 2018/10/12 下午3:00</span></div><div class="line"><span class="comment"># @Author  : Kionf</span></div><div class="line"><span class="comment"># @Site    : https://kionf.com</span></div><div class="line"><span class="comment"># @Software: Sublime</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> subprocess</div><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> jinja2 <span class="keyword">import</span> Environment, FileSystemLoader</div><div class="line"></div><div class="line"><span class="comment"># reload(sys)</span></div><div class="line"><span class="comment"># sys.setdefaultencoding('utf-8')</span></div><div class="line"></div><div class="line">LibToolkit = <span class="string">'pt-query-digest'</span></div><div class="line">LibToolkit_url = <span class="string">'https://github.com/kalivim/Mysql-SlowLog-analysis/raw/master/pt-query-digest'</span></div><div class="line">HtmlTemplate = <span class="string">'template.html'</span></div><div class="line">HtmlTemplate_url = <span class="string">'https://github.com/kalivim/Mysql-SlowLog-analysis/raw/master/template.html'</span></div><div class="line"></div><div class="line"><span class="comment">#检测极赖</span></div><div class="line">os.system(<span class="string">'rpm -q perl-Digest-MD5 || yum -y -q install perl-Digest-MD5'</span>)</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RunAndCheckCommand</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, commands, task_name, ret_code=<span class="number">0</span>)</span>:</span></div><div class="line">        self.commands = commands</div><div class="line">        self.task_name = task_name</div><div class="line">        self.ret_code = ret_code</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">check_command_status_code</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line"><span class="string">        检测任务</span></div><div class="line"><span class="string">        """</span></div><div class="line">        <span class="keyword">if</span> self.exp_code == self.ret_code:</div><div class="line">            print(<span class="string">"\033[92m [INFO]&gt;&gt; %s  \033[0m"</span> % self.task_name)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            print(<span class="string">"\033[91m [ERROR]&gt;&gt; %s \033[0m"</span> % self.task_name)</div><div class="line">            exit(<span class="number">1</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">exec_command_stdout_res</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line"><span class="string">        执行命令实时返回命令输出</span></div><div class="line"><span class="string">        :return:</span></div><div class="line"><span class="string">        """</span></div><div class="line">        command_res = subprocess.Popen(self.commands, shell=<span class="keyword">True</span>)</div><div class="line">        <span class="keyword">while</span> command_res.poll():</div><div class="line">            line = command_res.stdout.readline()</div><div class="line">            line.strip()</div><div class="line">            <span class="keyword">if</span> line:</div><div class="line">                print(line)</div><div class="line">        command_res.wait()</div><div class="line">        self.exp_code = command_res.returncode</div><div class="line">        self.check_command_status_code()</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">AnalysisMysqlSlowLog</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line"><span class="string">    分析Mysql慢查询日志输出报告。</span></div><div class="line"><span class="string">    调用第三方工具包percona-toolkit中pt-query-digest工具，默认输出slow.json文件Perl语言编写</span></div><div class="line"><span class="string">    """</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, slow_log_file, json_file, report_file)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line"><span class="string">        :param slow_log_file: 需要分析的慢查询日志文件</span></div><div class="line"><span class="string">        :param report_file: 生成报告文件名</span></div><div class="line"><span class="string">        """</span></div><div class="line">        self.LibToolkit = LibToolkit</div><div class="line">        self.json_file = json_file</div><div class="line">        self.report_file = report_file</div><div class="line">        self.slow_log_file = slow_log_file</div><div class="line">        self.query_digest = <span class="string">"perl %s  %s --output json --progress time,1 &gt; %s"</span> % (</div><div class="line">            self.LibToolkit, slow_log_file, self.json_file)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">check_argv_options</span><span class="params">(self)</span>:</span></div><div class="line">        get_toolkit = os.path.isfile(HtmlTemplate)</div><div class="line">        get_template = os.path.isfile(LibToolkit)</div><div class="line">        get_slow_log = os.path.isfile(self.slow_log_file)</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> get_toolkit:</div><div class="line">            res = RunAndCheckCommand(<span class="string">'wget %s 2&gt;/dev/null'</span> % LibToolkit_url, <span class="string">'下载pt-query-digest工具'</span>)</div><div class="line">            res.exec_command_stdout_res()</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> get_template:</div><div class="line">            res = RunAndCheckCommand(<span class="string">'wget %s 2&gt;/dev/null'</span> % HtmlTemplate_url, <span class="string">'下载报告HTML模板'</span>)</div><div class="line">            res.exec_command_stdout_res()</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> get_slow_log:</div><div class="line">            print(<span class="string">"\033[91m [ERROR]&gt;&gt; 指定 %s 慢查询日志不存在  \033[0m"</span> % self.slow_log_file)</div><div class="line">            exit(<span class="number">1</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">general_html_report</span><span class="params">(self, sql_info)</span>:</span></div><div class="line">        env = Environment(loader=FileSystemLoader(os.path.dirname(__file__)))</div><div class="line">        template = env.get_template(HtmlTemplate)</div><div class="line">        html_content = template.render(sql_info=sql_info)</div><div class="line">        <span class="keyword">with</span> open(self.report_file, <span class="string">'wa'</span>) <span class="keyword">as</span> f:</div><div class="line">            f.write(html_content.encode(<span class="string">'utf-8'</span>))</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">general_json_slow_log_report</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line"><span class="string">        调用第三方工具pt-query-digest生成json报告,并获取需要信息</span></div><div class="line"><span class="string">        :return: digest slow_log format to json</span></div><div class="line"><span class="string">        """</span></div><div class="line">        self.check_argv_options()</div><div class="line">        RunCommandsOBJ = RunAndCheckCommand(self.query_digest, <span class="string">'生成Json报告'</span>)</div><div class="line">        RunCommandsOBJ.exec_command_stdout_res()</div><div class="line">        f = open(self.json_file, <span class="string">'ra'</span>)</div><div class="line">        format_dict_all_data = json.load(f)</div><div class="line">        have_slow_query_tables = []</div><div class="line">        all_sql_info = []</div><div class="line">        all_slow_query_sql_info = format_dict_all_data[<span class="string">'classes'</span>]</div><div class="line">        global_sql_info = format_dict_all_data[<span class="string">'global'</span>]</div><div class="line"></div><div class="line">        <span class="keyword">for</span> slow_query_sql <span class="keyword">in</span> all_slow_query_sql_info:</div><div class="line">            query_metrics = slow_query_sql[<span class="string">'metrics'</span>]</div><div class="line">            query_time = query_metrics[<span class="string">'Query_time'</span>]</div><div class="line">            query_tables = slow_query_sql[<span class="string">'tables'</span>]</div><div class="line"></div><div class="line">            <span class="keyword">for</span> show_tables_sql <span class="keyword">in</span> query_tables:</div><div class="line">                get_table_name = show_tables_sql[<span class="string">'create'</span>].split(<span class="string">'.'</span>)[<span class="number">1</span>]</div><div class="line">                table_name = re.match(<span class="string">r'`(\w*)`\\G'</span>, get_table_name).group(<span class="number">1</span>)</div><div class="line">                <span class="keyword">if</span> table_name <span class="keyword">not</span> <span class="keyword">in</span> have_slow_query_tables:</div><div class="line">                    have_slow_query_tables.append(table_name)</div><div class="line"></div><div class="line">            sql_info = &#123;</div><div class="line">                <span class="string">'ID'</span>: slow_query_sql[<span class="string">'checksum'</span>],</div><div class="line">                <span class="string">'query_time_max'</span>: query_time[<span class="string">'max'</span>],</div><div class="line">                <span class="string">'query_time_min'</span>: query_time[<span class="string">'min'</span>],</div><div class="line">                <span class="string">'query_time_95'</span>: query_time[<span class="string">'pct_95'</span>],</div><div class="line">                <span class="string">'query_time_median'</span>: query_time[<span class="string">'median'</span>],</div><div class="line">                <span class="string">'query_row_send_95'</span>: query_metrics[<span class="string">'Rows_sent'</span>][<span class="string">'pct_95'</span>],</div><div class="line">                <span class="string">'query_db'</span>: query_metrics[<span class="string">'db'</span>][<span class="string">'value'</span>],</div><div class="line">                <span class="string">'slow_query_count'</span>: slow_query_sql[<span class="string">'query_count'</span>],</div><div class="line">                <span class="string">'slow_query_tables'</span>: have_slow_query_tables,</div><div class="line">                <span class="string">'sql'</span>: slow_query_sql[<span class="string">'example'</span>][<span class="string">'query'</span>],</div><div class="line"></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            all_sql_info.append(sql_info)</div><div class="line">            all_sql_info = sorted(all_sql_info, key=<span class="keyword">lambda</span> e: float(e[<span class="string">'query_time_95'</span>]), reverse=<span class="keyword">True</span>)</div><div class="line">        <span class="keyword">return</span> all_sql_info</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SendReportForEmail</span>:</span></div><div class="line">    <span class="keyword">pass</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">help_msg</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line"><span class="string">    输出帮助信息</span></div><div class="line"><span class="string">    """</span></div><div class="line">    msg = <span class="string">"""</span></div><div class="line"><span class="string">    Usage:</span></div><div class="line"><span class="string">        ./ slow-query-analysis.py 慢查询日志 生成json报告文件名 生成html报告文件名</span></div><div class="line"><span class="string">    """</span></div><div class="line">    print(msg)</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    <span class="keyword">if</span> len(sys.argv) == <span class="number">4</span>:</div><div class="line">        slow_log_name = sys.argv[<span class="number">1</span>]</div><div class="line">        json_file_name = sys.argv[<span class="number">2</span>]</div><div class="line">        report_name = sys.argv[<span class="number">3</span>]</div><div class="line">        print(<span class="string">'\033[92m ====开始分析慢查询日志==== \033[0m'</span>)</div><div class="line">        obj = AnalysisMysqlSlowLog(slow_log_file=slow_log_name, json_file=json_file_name, report_file=report_name)</div><div class="line">        res_json_report = obj.general_json_slow_log_report()</div><div class="line">        obj.general_html_report(res_json_report)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        help_msg()</div></pre></div></div></figure>
+<p><br></p>
+<hr>
+
+<h1 id="0x01-脚本使用方法"><a href="#0x01-脚本使用方法" class="headerlink" title="0x01 脚本使用方法"></a>0x01 脚本使用方法</h1><figure class="highlight bash"><div class="figcode"><div class="code"><pre><div class="line">wget https://raw.githubusercontent.com/kalivim/Mysql-SlowLog-analysis/master/analysis-slow-log.py</div><div class="line"></div><div class="line">chmod +x analysis-slow-log.py</div><div class="line"></div><div class="line">./analysis-slow-log.py Mysql_SlowLog_file general_json_filename report_name</div></pre></div></div></figure>
+<p>参数介绍</p>
+<figure class="highlight plain"><div class="figcode"><div class="code"><pre><div class="line">Mysql_SlowLog_file      mysql慢查询日志的文件名</div><div class="line">general_json_filename   脚本生成的json报告文件名</div><div class="line">report_name             生成的Html报告名</div></pre></div></div></figure>
+<p>生成结果：</p>
+<p><img src="https://kionf.com/article_images/slowlog-report-02.jpg" alt="info"></p>
+<p><br></p>
+<hr>
+
+<h1 id="0x02-pt-query-digest工具介绍"><a href="#0x02-pt-query-digest工具介绍" class="headerlink" title="0x02 pt-query-digest工具介绍"></a>0x02 pt-query-digest工具介绍</h1><p><code>pt-query-digest</code>为<code>percona</code>工具包中的一个perl脚本，用来分析Mysql慢查询日志，或者tcpdump的Mysql的数据包。生成结果有三种格式可以选择：json，report, Mysql</p>
+<p><strong>常用语句：</strong></p>
+<ul>
+<li>将结果和历史分析记录写入Mysql数据库（会自动创建表，需指定写入数据库）</li>
+</ul>
+<figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">./pt-query-digest --progress time,1 --review  h=172.16.8.185,D=kionf_dev,t=query_review,u=root,p=***REMOVED*** --history h=172.16.8.185,D=kionf_dev,t=query_history,u=root,p=***REMOVED*** mysql-M-slow.log</div></pre></div></div></figure>
+<ul>
+<li>生成json报告</li>
+</ul>
+<figure class="highlight shell"><div class="figcode"><div class="code"><pre><div class="line">./pt-query-digest --progress time,1 --output json mysql-slow.log</div></pre></div></div></figure>
+<ul>
+<li>生成report</li>
+</ul>
+<figure class="highlight shell"><div class="figcode"><div class="code"><pre><div class="line">./pt-query-digest mysql-slow.log</div></pre></div></div></figure>
+<p><br></p>
+<p><strong>选项介绍：</strong></p>
+<figure class="highlight shell"><div class="figcode"><div class="code"><pre><div class="line">--progess time,1     显示慢查询分析进度，每1s刷新一次</div><div class="line">--review             将分析结果保存到表中，这个分析只是对查询条件进行参数化，一个类型的查询一条记录，比较简单。</div><div class="line">                     下次使用--review时，存在相同的语句分析，不会记录。</div><div class="line">--history            将分析结果保存到表中，分析结果比较详细，</div><div class="line">                     下次再使用--history时，如果存在相同的语句，且查询所在的时间区间和历史表中的不同，则会记录到数据表中 </div><div class="line"></div><div class="line">--output             分析结果输出类型。 json report json-anon</div></pre></div></div></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      Kionf
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://kionf.com/2018/11/22/mysql-slowlog-report/" title="python 分析慢查询日志生成报告">https://kionf.com/2018/11/22/mysql-slowlog-report/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Mysql/" rel="tag"># Mysql</a>
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/21/tower-useage/" rel="next" title="ansible tower 实战使用详解">
+                <i class="fa fa-chevron-left"></i> ansible tower 实战使用详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kionf" />
+          <p class="site-author-name" itemprop="name">Kionf</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kalivim" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.freebuf.com/" title="FREEBUF" target="_blank">FREEBUF</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://paper.seebug.org/" title="SecPaper" target="_blank">SecPaper</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://kionf.com/edit/" title="MarkDown" target="_blank">MarkDown</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-直接上代码"><span class="nav-text">0x00 直接上代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-脚本使用方法"><span class="nav-text">0x01 脚本使用方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-pt-query-digest工具介绍"><span class="nav-text">0x02 pt-query-digest工具介绍</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="heart">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kionf</span>
+</div>
+
+
+<div class="powered-by">
+  什么样的人才能和时间成为朋友？
+</div>
+
+<div class="theme-info">
+  止于 -
+    源
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/motto.js"></script>
+
+<script type="text/javascript">
+  new Motto('.title', {
+    lyric: document.querySelector('.title').attributes['data-text'].value,
+    flashSpeed: 200,
+    flashTimeout: 1000
+  });
+</script>
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://kionf-com.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://kionf.com/2018/11/22/mysql-slowlog-report/';
+          this.page.identifier = '2018/11/22/mysql-slowlog-report/';
+          this.page.title = 'python 分析慢查询日志生成报告';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://kionf-com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (search_path.endsWith("json")) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  <script type="text/javascript" src="/js/src/function.js"></script>
+<script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+<script >
+	$(document).ready(
+	function()
+		{			
+			
+		}
+	);	
+</script>
+
+
+
+</body>
+</html>
