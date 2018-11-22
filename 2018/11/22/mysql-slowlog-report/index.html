@@ -112,7 +112,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://kionf.com/article_images/slowlog-report-01.jpg">
 <meta property="og:image" content="https://kionf.com/article_images/slowlog-report-02.jpg">
-<meta property="og:updated_time" content="2018-11-22T06:46:12.610Z">
+<meta property="og:updated_time" content="2018-11-22T06:49:24.006Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python 分析慢查询日志生成报告">
 <meta name="twitter:description" content="python分析Mysql慢查询。通过Python调用开源分析工具pt-query-digest生成json结果，Python脚本解析json生成html报告。">
@@ -435,7 +435,7 @@
 <ul>
 <li>将结果和历史分析记录写入Mysql数据库（会自动创建表，需指定写入数据库）</li>
 </ul>
-<figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">./pt-query-digest --progress time,1 --review  h=172.16.8.185,D=kionf_dev,t=query_review,u=root,p=***REMOVED*** --history h=172.16.8.185,D=kionf_dev,t=query_history,u=root,p=***REMOVED*** mysql-M-slow.log</div></pre></div></div></figure>
+<figure class="highlight shell"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">./pt-query-digest --progress time,1 --review  h=172.16.8.185,D=kionf_dev,t=query_review,u=root,p=passwd --history h=172.16.8.185,D=kionf_dev,t=query_history,u=root,p=passwd mysql-M-slow.log</div></pre></div></div></figure>
 <ul>
 <li>生成json报告</li>
 </ul>
