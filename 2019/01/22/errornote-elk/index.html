@@ -110,7 +110,7 @@
 <meta property="og:site_name" content="Kionf">
 <meta property="og:description" content="elasticsearch &amp;gt; 5.0 更改thread pool">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-22T10:12:41.326Z">
+<meta property="og:updated_time" content="2019-01-22T10:14:46.439Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ElasticSearch 更改search线程池">
 <meta name="twitter:description" content="elasticsearch &amp;gt; 5.0 更改thread pool">
@@ -426,7 +426,7 @@
 </blockquote>
 <a id="more"></a>
 <h1 id="0x00-报错"><a href="#0x00-报错" class="headerlink" title="0x00 报错"></a>0x00 报错</h1><p>es崩溃查看日志，由于<code>search</code> 线程设置过小导致程序崩溃，默认<code>search</code>线程大小为<strong><code>((cpu个数 * 3) / 2) + 1</code></strong></p>
-<figure class="highlight plain"><figcaption><span class="caption">error_log</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">Caused by: org.elasticsearch.common.util.concurrent.EsRejectedExecutionException: rejected execution of org.elasticsearch.search.SearchService$3@4d6f25c2 on EsThreadPoolExecutor[search, queue capacity = 1000, org.elasticsearch.common.util.concurrent.EsThreadPoolExecutor@24522e89[Running, pool size = 13, active threads = 13, queued tasks = 52728, completed tasks = 314227215]]</div></pre></div></div></figure>
+<figure class="highlight plain"><figcaption><span class="caption">error_log</span></figcaption><div class="figcode"><div class="code"><pre><div class="line">Caused by: org.elasticsearch.common.util.concurrent.EsRejectedExecutionException: </div><div class="line">	rejected execution of org.elasticsearch.search.SearchService$3@4d6f25c2 on EsThreadPoolExecutor</div><div class="line">	[search, queue capacity = 1000, org.elasticsearch.common.util.concurrent.EsThreadPoolExecutor@24522e89</div><div class="line">	[Running, pool size = 13, active threads = 13, queued tasks = 52728, completed tasks = 314227215]]</div></pre></div></div></figure>
 <h2 id="1-查看线程状态"><a href="#1-查看线程状态" class="headerlink" title="1. 查看线程状态"></a>1. 查看线程状态</h2><figure class="highlight sh"><div class="figcode"><div class="code"><pre><div class="line">GET /_cat/thread_pool</div><div class="line"></div><div class="line">V3IzzeC bulk                0 0 0</div><div class="line">V3IzzeC fetch_shard_started 0 0 0</div><div class="line">V3IzzeC fetch_shard_store   0 0 0</div><div class="line">V3IzzeC flush               0 0 0</div><div class="line">V3IzzeC force_merge         0 0 0</div><div class="line">V3IzzeC generic             2 0 0</div><div class="line">V3IzzeC get                 0 0 0</div><div class="line">V3IzzeC index               0 0 0</div><div class="line">V3IzzeC listener            0 0 0</div><div class="line">V3IzzeC management          3 0 0</div><div class="line">V3IzzeC refresh             0 0 0</div><div class="line">V3IzzeC search              13 0 1272</div><div class="line">V3IzzeC snapshot            0 0 0</div><div class="line">V3IzzeC warmer              0 0 0</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">#也可用此api查询</span></div><div class="line">GET /_cat/thread_pool/search?v&amp;h=id,name,active,queue,rejected,completed</div></pre></div></div></figure>
 <blockquote>
 <ul>
