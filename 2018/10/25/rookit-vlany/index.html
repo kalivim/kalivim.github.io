@@ -102,13 +102,13 @@
 
 
 
-<meta name="description" content="此工具vlany通过LD_PRELOAD环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。">
+<meta name="description" content="&amp;gt;此工具vlany通过LD_PRELOAD环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。">
 <meta name="keywords" content="Rookit">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux动态链接库预加载型后门，Vlany安装及分析">
 <meta property="og:url" content="https://kionf.com/2018/10/25/rookit-vlany/index.html">
 <meta property="og:site_name" content="Kionf">
-<meta property="og:description" content="此工具vlany通过LD_PRELOAD环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。">
+<meta property="og:description" content="&amp;gt;此工具vlany通过LD_PRELOAD环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-01.jpg">
 <meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-02.jpg">
@@ -120,10 +120,10 @@
 <meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-08.jpg">
 <meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-09.jpg">
 <meta property="og:image" content="https://kionf.com/article_images/vlany/vlany-10.jpg">
-<meta property="og:updated_time" content="2018-11-28T15:26:08.008Z">
+<meta property="og:updated_time" content="2019-02-12T09:43:09.182Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux动态链接库预加载型后门，Vlany安装及分析">
-<meta name="twitter:description" content="此工具vlany通过LD_PRELOAD环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。">
+<meta name="twitter:description" content="&amp;gt;此工具vlany通过LD_PRELOAD环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。">
 <meta name="twitter:image" content="https://kionf.com/article_images/vlany/vlany-01.jpg">
 
 
@@ -433,9 +433,9 @@
       
 
       
-        <script id="asciicast-QDmzYWjPylDMA0gyMlSR0xvbx" src="https://asciinema.org/a/QDmzYWjPylDMA0gyMlSR0xvbx.js" async></script>
-
-<blockquote class="blockquote-center"><p>此工具<strong><a href="https://github.com/mempodippy/vlany" title="vlany Github" target="_blank" rel="noopener">vlany</a></strong>通过<code>LD_PRELOAD</code>环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。</p>
+        <!--
+<script id="asciicast-QDmzYWjPylDMA0gyMlSR0xvbx" src="https://asciinema.org/a/QDmzYWjPylDMA0gyMlSR0xvbx.js" async></script>
+-->&gt;<br><blockquote class="blockquote-center"><p>此工具<strong><a href="https://github.com/mempodippy/vlany" title="vlany Github" target="_blank" rel="noopener">vlany</a></strong>通过<code>LD_PRELOAD</code>环境变量和/etc/ld.so.preload的配置文件来重写系统调用函数，加载攻击者自定义的恶意函数。</p>
 </blockquote>
 <a id="more"></a>
 <h1 id="0x00-工具原理分析"><a href="#0x00-工具原理分析" class="headerlink" title="0x00 工具原理分析"></a>0x00 工具原理分析</h1><p>  预加载动态连接库这种利用技术，在早些年国外就已经有过利用相关的文章。只是近年国内恶意软件利用频繁被各大安全厂商捕获分析，也就渐渐公布在大众眼前。对于这种利用的大概原理，已有文章做了深入分析，这里就不重复造轮。文章地址：<a href="http://www.freebuf.com/column/162604.html" target="_blank" rel="noopener">警惕利用Linux预加载型恶意动态链接库的后门</a></p>
