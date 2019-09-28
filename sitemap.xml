@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://kionf.com/2019/09/28/kali-vnc/</loc>
+    
+    <lastmod>2019-09-28T10:34:35.690Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://kionf.com/2018/09/11/hack-note-00100/</loc>
+    
+    <lastmod>2019-09-28T10:22:20.471Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://kionf.com/2018/09/13/metasploit-presistence/</loc>
+    
+    <lastmod>2019-09-28T10:22:00.115Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://kionf.com/2018/10/25/rookit-vlany/</loc>
     
     <lastmod>2019-02-12T09:43:09.000Z</lastmod>
@@ -26,13 +47,6 @@
     <loc>https://kionf.com/2018/06/28/blog-next/</loc>
     
     <lastmod>2019-01-16T03:41:52.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://kionf.com/2018/09/11/hack-note-00100/</loc>
-    
-    <lastmod>2018-11-28T15:21:21.000Z</lastmod>
     
   </url>
   
@@ -79,14 +93,7 @@
   </url>
   
   <url>
-    <loc>https://kionf.com/2018/09/13/metasploit-presistence/</loc>
-    
-    <lastmod>2018-10-31T10:19:28.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://kionf.com/2016/12/15/linux-pip/</loc>
+    <loc>https://kionf.com/2015/04/04/linux-web/</loc>
     
     <lastmod>2018-10-31T10:19:28.000Z</lastmod>
     
@@ -121,7 +128,7 @@
   </url>
   
   <url>
-    <loc>https://kionf.com/2016/12/06/kali-metasploit/</loc>
+    <loc>https://kionf.com/2016/12/30/kali-tools/</loc>
     
     <lastmod>2018-10-31T10:19:28.000Z</lastmod>
     
@@ -135,14 +142,14 @@
   </url>
   
   <url>
-    <loc>https://kionf.com/2015/04/04/linux-web/</loc>
+    <loc>https://kionf.com/2016/12/15/errornote-ss/</loc>
     
     <lastmod>2018-10-31T10:19:28.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://kionf.com/2016/12/30/kali-tools/</loc>
+    <loc>https://kionf.com/2018/08/30/bigdata-ambari/</loc>
     
     <lastmod>2018-10-31T10:19:28.000Z</lastmod>
     
@@ -163,7 +170,7 @@
   </url>
   
   <url>
-    <loc>https://kionf.com/2016/12/15/errornote-ss/</loc>
+    <loc>https://kionf.com/2016/12/06/kali-metasploit/</loc>
     
     <lastmod>2018-10-31T10:19:28.000Z</lastmod>
     
@@ -226,7 +233,7 @@
   </url>
   
   <url>
-    <loc>https://kionf.com/2018/08/30/bigdata-ambari/</loc>
+    <loc>https://kionf.com/2017/06/21/linux-gitlab/</loc>
     
     <lastmod>2018-10-31T10:19:28.000Z</lastmod>
     
@@ -247,7 +254,7 @@
   </url>
   
   <url>
-    <loc>https://kionf.com/2017/06/21/linux-gitlab/</loc>
+    <loc>https://kionf.com/2016/05/12/linux-kickstart/</loc>
     
     <lastmod>2018-10-31T10:19:28.000Z</lastmod>
     
@@ -261,7 +268,7 @@
   </url>
   
   <url>
-    <loc>https://kionf.com/2016/05/12/linux-kickstart/</loc>
+    <loc>https://kionf.com/2016/12/15/linux-pip/</loc>
     
     <lastmod>2018-10-31T10:19:28.000Z</lastmod>
     
