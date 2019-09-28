@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[树莓派kali系统配置wifi网络自动连接]]></title>
+    <url>%2F2019%2F09%2F28%2Fshumeipai-wifi%2F</url>
+    <content type="text"><![CDATA[安装Kali系统的树莓派配置开机wifi自动连接 0x00生成wifi配置文件root@Kionf-Magic:~# wpa_passphrase "HUAWEI" "12345678"network=&#123; ssid="HUAWEI" #psk="12345678" psk=fcd71f4ae6313684afe9c5f10226db0e8895f2778f9a246ac8bd9cbca92945a1&#125; 配置文件写入到/etc/wpa_supplicant/wpa_supplicant.conf 0x01连接测试1)连接wifinohup wpa_supplicant -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf &amp; 2)获取ipdhclient wlan0 3)测试网络ping 1.1.1.1 0x02启动网卡配置/etc/network/interfacesvim /etc/network/interfaces只留如下内容:auto loiface lo inet loopback vim /etc/NetworkManager/NetworkManager.conf /etc/NetworkManager/NetworkManager.conf1234567891011121314151617181920212223242526272829303132[connection]#wifi配置文件id=kaliviuuid=d102dc2c-a799-4926-9e39-0489d72e4ddftype=wifiautoconnect-priority=3#对应网卡interface-name=wlan0permissions=[wifi]#自己wlan网卡的MAC地址mac-address=B8:27:EB:A8:12:F6mac-address-blacklist=mode=infrastructure#wifi名称ssid=HUAWEI[wifi-security]key-mgmt=wpa-psk#密码psk=12345678[ipv4]dns-search=method=auto[ipv6]addr-gen-mode=stable-privacydns-search=ip6-privacy=0method=ignore]]></content>
+      <categories>
+        <category>Kali</category>
+        <category>树莓派</category>
+      </categories>
+      <tags>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[ngrok自建服务器搭建]]></title>
+    <url>%2F2019%2F09%2F28%2Fngrok-server%2F</url>
+    <content type="text"><![CDATA[自建ngrok服务器，一把梭子干，笔记类型 0x00 安装需要程序安装依赖编译程序 yum -y install golang git openssl gcc 下载Ngrok源码cd /optgit clone https://github.com/inconshreveable/ngrok.git 0x01 配置更改ngrok源码配置客户端默认服务器域名 vim ngrok/client/model.go#第24行defaultServerAddr = &quot;ngrok.yourself:4443&quot;#更具需要更改，这个是客户端ngrok web显示的监听配置defaultInspectAddr = &quot;127.0.0.1:4040&quot; 0x02 生成证书openssl genrsa -out rootCA.key 2048openssl req -x509 -new -nodes -key rootCA.key -subj "/CN=ngrok.yourself.com" -days 5000 -out rootCA.pemopenssl genrsa -out device.key 2048openssl req -new -key device.key -subj "/CN=ngrok.yourself.com" -out device.csropenssl x509 -req -in device.csr -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -out device.crt -days 5000 复制自签名证书到软件 cp -f rootCA.pem assets/client/tls/ngrokroot.crtcp -f device.crt assets/server/tls/snakeoil.crtcp -f device.key assets/server/tls/snakeoil.key 0x03 编译ngrok123456789make release-server#不同平台的client#linuxGOOS=linux GOARCH=amd64 make release-client#winGOOS=windows GOARCH=amd64 make release-client#树莓派GOOS=linux GOARCH=arm GOARM=6 make release-client 0x04启动服务端启动： /opt/ngrok/bin/ngrokd -tlsKey=/opt/ngrok/server.key -tlsCrt=/opt/ngrok/server.crt -domain='ngrok.yourself.com' -httpAddr=':8081' -httpsAddr=':8082' 客户端启动： 配置文件12345678910111213141516server_addr: "ngrok.kionf.com:4443"trust_host_root_certs: falsetunnels: #配置名称可以自己取 ssh: #转发到远程端口 remote_port: 6665 proto: #协议：本地端口 tcp: 110 fucc: #转发到远程端口 remote_port: 777 proto: #协议：本地端口 tcp: 120 nohup /data/ngrok/ngrok -config=/data/ngrok/cfg start-all &gt; /data/ngrok/log &amp; start ssh指定转发， start-all 启动所有]]></content>
+      <categories>
+        <category>Ngrok</category>
+      </categories>
+      <tags>
+        <tag>ngrok</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[kali linux 安装vnc及配置]]></title>
     <url>%2F2019%2F09%2F28%2Fkali-vnc%2F</url>
     <content type="text"><![CDATA[主要解决vncserver配置问题，解决vncviewer连接后不显示桌面，灰屏问题实验环境：Linux kionf 4.19.0-kali4-amd64 #1 SMP Debian 4.19.28-2kali1 (2019-03-18) x86_64 GNU/Linux 0x00. 安装vncserverapt-get install vnc4server 0x01. 启动并配置vncroot@kionf:~/.vnc# vncserver 1. 配置密码，并启动服务You will require a password to access your desktops.Password:Verify:# 设置登录密码6位及以上Would you like to enter a view-only password (y/n)? n# 是否创建只允许观看密码vncserver: /usr/bin/Xtigervnc did not start up, please look into &apos;/root/.vnc/kionf:1.log&apos; to determine the reason! -2 2. 检查是否启动成功root@kionf:~/.vnc# netstat -ntlp|grep vnctcp 0 0 127.0.0.1:5902 0.0.0.0:* LISTEN 18624/Xtigervnc tcp6 0 0 ::1:5902 :::* LISTEN 18624/Xtigervnc 3. 配置连接启动桌面文件vim /$HOME/.vnc/xstartup xstartup123456#!/bin/sh# Start Gnome 3 Desktop [ -x /etc/vnc/xstartup ] &amp;&amp; exec /etc/vnc/xstartup[ -r $HOME/.Xresources ] &amp;&amp; xrdb $HOME/.Xresourcesvncconfig -iconic &amp;dbus-launch --exit-with-session gnome-session &amp; chmod +x /$HOME/.vnc/xstartup 0x02 客户端连接测试随便测试vncviewer 127.0.0.1:5902]]></content>
@@ -300,6 +323,14 @@
       </categories>
   </entry>
   <entry>
+    <title><![CDATA[ShadowSocks启动报错undefined symbol EVP_CIPHER_CTX_cleanup]]></title>
+    <url>%2F2016%2F12%2F15%2Ferrornote-ss%2F</url>
+    <content type="text"><![CDATA[解决openssl升级到1.1.0以上版本，导致shadowsocks2.8.2启动报undefined symbol: EVP_CIPHER_CTX_cleanup错误。 准备翻墙冲浪的时候Shadowsocks报错如下：12AttributeError: /usr/local/ssl/lib/libcrypto.so.1.1: undefined symbol: EVP_CIPHER_CTX_cleanupshadowsocks start failed 解决方法 ：1. vim打开文件openssl.pyvim /usr/local/lib/python3.5/dist-packages/shadowsocks/crypto/openssl.py 路径不同根据报错路径而定 2. 修改libcrypto.EVP_CIPHER_CTX_cleanup.argtypes:%s/cleanup/reset/ :x 以上两条为VIM命令， 替换文中libcrypto.EVP_CIPHER_CTX_cleanup.argtypes 为libcrypto.EVP_CIPHER_CTX_reset.argtypes 共两处，并保存 3. 运行ShadowsocksOK 原因：这个问题是由于在openssl1.1.0版本中，废弃了EVP_CIPHER_CTX_cleanup函数，如官网中所说： EVP_CIPHER_CTX was made opaque in OpenSSL 1.1.0. As a result, EVP_CIPHER_CTX_reset() appeared and EVP_CIPHER_CTX_cleanup() disappeared. EVP_CIPHER_CTX_init() remains as an alias for EVP_CIPHER_CTX_reset(). EVP_CIPHER_CTX_reset函数替代了EVP_CIPHER_CTX_cleanup函数 EVP_CIPHER_CTX_reset函数说明： EVP_CIPHER_CTX_reset() clears all information from a cipher context and free up any allocated memory associate with it, except the ctx itself. This function should be called anytime ctx is to be reused for another EVP_CipherInit() / EVP_CipherUpdate() / EVP_CipherFinal() series of calls. EVP_CIPHER_CTX_cleanup函数说明： EVP_CIPHER_CTX_cleanup() clears all information from a cipher context and free up any allocated memory associate with it. It should be called after all operations using a cipher are complete so sensitive information does not remain in memory. 可以看出，二者功能基本上相同，都是释放内存，只是应该调用的时机稍有不同，所以用reset代替cleanup问题不大。 提示：openssl1.1.0目前兼容性很不好，大部分的软件都不支持目前支持的有nginx-1.11.5、curl-7.50.3不支持的有PHP-7.0.12、openssh-7.3p1所以如果决定使用openssl1.1.0需要考虑很多兼容问题，必须保留1.0.2或1.0.1(不推荐，存在一些已知漏洞，最重要的是如果服务器要开http2，由于新版chrome必须使用ALPN的限制，只有1.0.2版本支持ALPN，所以必须升级到1.0.2)版本以便编译其他程序。]]></content>
+      <categories>
+        <category>ErrorNote</category>
+      </categories>
+  </entry>
+  <entry>
     <title><![CDATA[更改pip源为国内阿里源]]></title>
     <url>%2F2016%2F12%2F15%2Flinux-pip%2F</url>
     <content type="text"><![CDATA[pip默认源为国外，so提高下载速度更换国内阿里源，及apt源、定制bash命令行提示符，废话不多直进主题 1. 创建配置文件1mkdir ~/.pip/ &amp;&amp; cd ~/.pip/; vim pip.conf 2. 添加阿里源添加如下内容 12345[global]index-url = http://mirrors.aliyun.com/pypi/simple/[install]trusted-host=mirrors.aliyun.com 3. 测试1234567891011root@kalivi[12:13].pip:# pip install --upgrade pipYou are using pip version 7.1.0, however version 9.0.1 is available.You should consider upgrading via the 'pip install --upgrade pip' command.Collecting pip Downloading http://mirrors.aliyun.com/pypi/packages/b6/ac/7015eb97dc749283ffdec1c3a88ddb8ae03b8fad0f0e611408f196358da3/pip-9.0.1-py2.py3-none-any.whl (1.3MB) 100% |████████████████████████████████| 1.3MB 5.0MB/s Installing collected packages: pip Found existing installation: pip 7.1.0 Uninstalling pip-7.1.0: Successfully uninstalled pip-7.1.0Successfully installed pip-9.0.1 附上kali rolling清华大学apt镜像源 deb http://mirrors.tuna.tsinghua.edu.cn/kali kali-rolling main non-free contrib 定制bash命令行提示符123echo "PS1='\[\e[31m\]\u@\h\[\e[m\][\A]\[\e[34m\]\W:\[\e[34m\]\$\[\e[m\] '" &gt;&gt; ~/.bashrc &amp;&amp; source ~/.bashrcroot@kalivi[12:23]~:#]]></content>
@@ -310,14 +341,6 @@
       <tags>
         <tag>pip</tag>
       </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[ShadowSocks启动报错undefined symbol EVP_CIPHER_CTX_cleanup]]></title>
-    <url>%2F2016%2F12%2F15%2Ferrornote-ss%2F</url>
-    <content type="text"><![CDATA[解决openssl升级到1.1.0以上版本，导致shadowsocks2.8.2启动报undefined symbol: EVP_CIPHER_CTX_cleanup错误。 准备翻墙冲浪的时候Shadowsocks报错如下：12AttributeError: /usr/local/ssl/lib/libcrypto.so.1.1: undefined symbol: EVP_CIPHER_CTX_cleanupshadowsocks start failed 解决方法 ：1. vim打开文件openssl.pyvim /usr/local/lib/python3.5/dist-packages/shadowsocks/crypto/openssl.py 路径不同根据报错路径而定 2. 修改libcrypto.EVP_CIPHER_CTX_cleanup.argtypes:%s/cleanup/reset/ :x 以上两条为VIM命令， 替换文中libcrypto.EVP_CIPHER_CTX_cleanup.argtypes 为libcrypto.EVP_CIPHER_CTX_reset.argtypes 共两处，并保存 3. 运行ShadowsocksOK 原因：这个问题是由于在openssl1.1.0版本中，废弃了EVP_CIPHER_CTX_cleanup函数，如官网中所说： EVP_CIPHER_CTX was made opaque in OpenSSL 1.1.0. As a result, EVP_CIPHER_CTX_reset() appeared and EVP_CIPHER_CTX_cleanup() disappeared. EVP_CIPHER_CTX_init() remains as an alias for EVP_CIPHER_CTX_reset(). EVP_CIPHER_CTX_reset函数替代了EVP_CIPHER_CTX_cleanup函数 EVP_CIPHER_CTX_reset函数说明： EVP_CIPHER_CTX_reset() clears all information from a cipher context and free up any allocated memory associate with it, except the ctx itself. This function should be called anytime ctx is to be reused for another EVP_CipherInit() / EVP_CipherUpdate() / EVP_CipherFinal() series of calls. EVP_CIPHER_CTX_cleanup函数说明： EVP_CIPHER_CTX_cleanup() clears all information from a cipher context and free up any allocated memory associate with it. It should be called after all operations using a cipher are complete so sensitive information does not remain in memory. 可以看出，二者功能基本上相同，都是释放内存，只是应该调用的时机稍有不同，所以用reset代替cleanup问题不大。 提示：openssl1.1.0目前兼容性很不好，大部分的软件都不支持目前支持的有nginx-1.11.5、curl-7.50.3不支持的有PHP-7.0.12、openssh-7.3p1所以如果决定使用openssl1.1.0需要考虑很多兼容问题，必须保留1.0.2或1.0.1(不推荐，存在一些已知漏洞，最重要的是如果服务器要开http2，由于新版chrome必须使用ALPN的限制，只有1.0.2版本支持ALPN，所以必须升级到1.0.2)版本以便编译其他程序。]]></content>
-      <categories>
-        <category>ErrorNote</category>
-      </categories>
   </entry>
   <entry>
     <title><![CDATA[RedHat6/CentOS6 安装Metasploit]]></title>
